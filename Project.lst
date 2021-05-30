@@ -1,4 +1,4 @@
-Microsoft (R) Macro Assembler Version 14.28.29914.0	    05/29/21 23:34:27
+Microsoft (R) Macro Assembler Version 14.28.29914.0	    05/30/21 00:44:29
 #Program Template     (template.asm			     Page 1 - 1
 
 
@@ -46,6 +46,15 @@ Microsoft (R) Macro Assembler Version 14.28.29914.0	    05/29/21 23:34:27
 
 					pop		EAX
 					pop		ECX
+					pop		EDX
+				ENDM
+
+				mDisplayString MACRO display_string
+					push	EDX
+
+					mov		EDX, OFFSET display_string
+					call	WriteString
+
 					pop		EDX
 				ENDM
 
@@ -117,12 +126,11 @@ Microsoft (R) Macro Assembler Version 14.28.29914.0	    05/29/21 23:34:27
 	    00
 	   ]
  000000FC 00000000		userInputLen	DWORD		?
- 00000100 00000000		userInputBytes	DWORD		?
 
  00000000			.code
  00000000			main PROC
 
-					mGetString	prompt, userInput, MAX_USER_INPUT_SIZE, userInputLen
+					mGetString		prompt, userInput, MAX_USER_INPUT_SIZE, userInputLen
  00000000  52		     1		push	EDX
  00000001  51		     1		push	ECX
  00000002  50		     1		push	EAX
@@ -135,18 +143,21 @@ Microsoft (R) Macro Assembler Version 14.28.29914.0	    05/29/21 23:34:27
  00000021  58		     1		pop		EAX
  00000022  59		     1		pop		ECX
  00000023  5A		     1		pop		EDX
- 00000024  BA 000000F1 R		mov		EDX, OFFSET userInput
- 00000029  E8 00000000 E		call	WriteString
+					mDisplayString	userInput
+ 00000024  52		     1		push	EDX
+ 00000025  BA 000000F1 R     1		mov		EDX, OFFSET userInput
+ 0000002A  E8 00000000 E     1		call	WriteString
+ 0000002F  5A		     1		pop		EDX
 
 					Invoke ExitProcess,0	; exit to operating system
- 0000002E  6A 00	   *	    push   +000000000h
- 00000030  E8 00000000 E   *	    call   ExitProcess
- 00000035			main ENDP
+ 00000030  6A 00	   *	    push   +000000000h
+ 00000032  E8 00000000 E   *	    call   ExitProcess
+ 00000037			main ENDP
 
 				; (insert additional procedures here)
 
 				END main
-Microsoft (R) Macro Assembler Version 14.28.29914.0	    05/29/21 23:34:27
+Microsoft (R) Macro Assembler Version 14.28.29914.0	    05/30/21 00:44:29
 #Program Template     (template.asm			     Symbols 2 - 1
 
 
@@ -156,6 +167,7 @@ Macros:
 
                 N a m e                 Type
 
+mDisplayString . . . . . . . . .	Proc
 mGetString . . . . . . . . . . .	Proc
 
 
@@ -247,8 +259,8 @@ Segments and Groups:
 
 FLAT . . . . . . . . . . . . . .	GROUP
 STACK  . . . . . . . . . . . . .	32 Bit	 00001000 Para	  Stack	  'STACK'	 
-_DATA  . . . . . . . . . . . . .	32 Bit	 00000104 Para	  Public  'DATA'	
-_TEXT  . . . . . . . . . . . . .	32 Bit	 00000035 Para	  Public  'CODE'	
+_DATA  . . . . . . . . . . . . .	32 Bit	 00000100 Para	  Public  'DATA'	
+_TEXT  . . . . . . . . . . . . .	32 Bit	 00000037 Para	  Public  'CODE'	
 
 
 Procedures, parameters, and locals:
@@ -355,7 +367,7 @@ WriteStackFrame  . . . . . . . .	P Near	 00000000 FLAT	Length= 00000000 External
 WriteString  . . . . . . . . . .	P Near	 00000000 FLAT	Length= 00000000 External STDCALL
 WriteToFile  . . . . . . . . . .	P Near	 00000000 FLAT	Length= 00000000 External STDCALL
 WriteWindowsMsg  . . . . . . . .	P Near	 00000000 FLAT	Length= 00000000 External STDCALL
-main . . . . . . . . . . . . . .	P Near	 00000000 _TEXT	Length= 00000035 Public STDCALL
+main . . . . . . . . . . . . . .	P Near	 00000000 _TEXT	Length= 00000037 Public STDCALL
 printf . . . . . . . . . . . . .	P Near	 00000000 FLAT	Length= 00000000 External C
 scanf  . . . . . . . . . . . . .	P Near	 00000000 FLAT	Length= 00000000 External C
 wsprintfA  . . . . . . . . . . .	P Near	 00000000 FLAT	Length= 00000000 External C
@@ -599,7 +611,6 @@ lightRed . . . . . . . . . . . .	Number	 0000000Ch
 magenta  . . . . . . . . . . . .	Number	 00000005h   
 prompt . . . . . . . . . . . . .	Byte	 000000D1 _DATA	
 red  . . . . . . . . . . . . . .	Number	 00000004h   
-userInputBytes . . . . . . . . .	DWord	 00000100 _DATA	
 userInputLen . . . . . . . . . .	DWord	 000000FC _DATA	
 userInput  . . . . . . . . . . .	Byte	 000000F1 _DATA	
 white  . . . . . . . . . . . . .	Number	 0000000Fh   

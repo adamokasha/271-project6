@@ -28,6 +28,15 @@ mGetString MACRO buffer, usrInput, usrInputCount, usrInputBytes
 	pop		EDX
 ENDM
 
+mDisplayString MACRO display_string
+	push	EDX
+
+	mov		EDX, OFFSET display_string
+	call	WriteString
+
+	pop		EDX
+ENDM
+
 ; (insert constant definitions here)
 
 LO			 = -2147483648
@@ -47,12 +56,12 @@ intro2			BYTE		"Please input 10 signed decimal integers that can fit inside a 32
 prompt			BYTE		"Please enter a signed integer: ",0
 userInput		BYTE		MAX_USER_INPUT_SIZE DUP(?)
 userInputLen	DWORD		?
-userInputBytes	DWORD		?
 
 .code
 main PROC
 
-	mGetString	prompt, userInput, MAX_USER_INPUT_SIZE, userInputLen
+	mGetString		prompt, userInput, MAX_USER_INPUT_SIZE, userInputLen
+	mDisplayString	userInput
 
 	Invoke ExitProcess,0	; exit to operating system
 main ENDP
