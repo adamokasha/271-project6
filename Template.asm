@@ -11,17 +11,17 @@ TITLE Program Template     (template.asm)
 INCLUDE Irvine32.inc
 
 ; (insert macro definitions here)
-mGetString MACRO buffer, usrInput, usrInputCount, usrInputBytes
+mGetString MACRO buffer, usrInput, usrInputCount, usrInputLen
 	push	EDX
 	push	ECX
 	push	EAX
 
-	mov		EDX, OFFSET buffer
+	mov		EDX, buffer
 	call	WriteString
-	mov		EDX, OFFSET usrInput
+	mov		EDX, usrInput
 	mov		ECX, usrInputCount
 	call	ReadString
-	mov		usrInputBytes, EAX
+	mov		userInputLen, EAX
 
 	pop		EAX
 	pop		ECX
@@ -31,7 +31,7 @@ ENDM
 mDisplayString MACRO display_string
 	push	EDX
 
-	mov		EDX, OFFSET display_string
+	mov		EDX, display_string
 	call	WriteString
 
 	pop		EDX
@@ -56,16 +56,28 @@ intro2			BYTE		"Please input 10 signed decimal integers that can fit inside a 32
 prompt			BYTE		"Please enter a signed integer: ",0
 userInput		BYTE		MAX_USER_INPUT_SIZE DUP(?)
 userInputLen	DWORD		?
+userNum			SDWORD		?
 
 .code
 main PROC
 
-	mGetString		prompt, userInput, MAX_USER_INPUT_SIZE, userInputLen
-	mDisplayString	userInput
+	push	OFFSET prompt
+	push	OFFSET userInput
+	push	OFFSET userInputLen
+	call	ReadVal
+	;mDisplayString	OFFSET userInput
 
 	Invoke ExitProcess,0	; exit to operating system
 main ENDP
 
 ; (insert additional procedures here)
+
+ReadVal PROC USES EBP
+	mov  EBP, ESP
+
+	mGetString		[EBP + 16], [EBP + 12], MAX_USER_INPUT_SIZE, [EBP + 8]
+	
+	RET
+ReadVal ENDP
 
 END main

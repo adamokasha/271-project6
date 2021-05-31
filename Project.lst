@@ -1,4 +1,4 @@
-Microsoft (R) Macro Assembler Version 14.28.29914.0	    05/30/21 00:44:29
+Microsoft (R) Macro Assembler Version 14.28.29914.0	    05/30/21 20:30:27
 #Program Template     (template.asm			     Page 1 - 1
 
 
@@ -32,17 +32,17 @@ Microsoft (R) Macro Assembler Version 14.28.29914.0	    05/30/21 00:44:29
 			      C 
 
 				; (insert macro definitions here)
-				mGetString MACRO buffer, usrInput, usrInputCount, usrInputBytes
+				mGetString MACRO buffer, usrInput, usrInputCount, usrInputLen
 					push	EDX
 					push	ECX
 					push	EAX
 
-					mov		EDX, OFFSET buffer
+					mov		EDX, buffer
 					call	WriteString
-					mov		EDX, OFFSET usrInput
+					mov		EDX, usrInput
 					mov		ECX, usrInputCount
 					call	ReadString
-					mov		usrInputBytes, EAX
+					mov		userInputLen, EAX
 
 					pop		EAX
 					pop		ECX
@@ -52,7 +52,7 @@ Microsoft (R) Macro Assembler Version 14.28.29914.0	    05/30/21 00:44:29
 				mDisplayString MACRO display_string
 					push	EDX
 
-					mov		EDX, OFFSET display_string
+					mov		EDX, display_string
 					call	WriteString
 
 					pop		EDX
@@ -126,38 +126,49 @@ Microsoft (R) Macro Assembler Version 14.28.29914.0	    05/30/21 00:44:29
 	    00
 	   ]
  000000FC 00000000		userInputLen	DWORD		?
+ 00000100 00000000		userNum			SDWORD		?
 
  00000000			.code
  00000000			main PROC
 
-					mGetString		prompt, userInput, MAX_USER_INPUT_SIZE, userInputLen
- 00000000  52		     1		push	EDX
- 00000001  51		     1		push	ECX
- 00000002  50		     1		push	EAX
- 00000003  BA 000000D1 R     1		mov		EDX, OFFSET prompt
- 00000008  E8 00000000 E     1		call	WriteString
- 0000000D  BA 000000F1 R     1		mov		EDX, OFFSET userInput
- 00000012  B9 0000000B	     1		mov		ECX, MAX_USER_INPUT_SIZE
- 00000017  E8 00000000 E     1		call	ReadString
- 0000001C  A3 000000FC R     1		mov		userInputLen, EAX
- 00000021  58		     1		pop		EAX
- 00000022  59		     1		pop		ECX
- 00000023  5A		     1		pop		EDX
-					mDisplayString	userInput
- 00000024  52		     1		push	EDX
- 00000025  BA 000000F1 R     1		mov		EDX, OFFSET userInput
- 0000002A  E8 00000000 E     1		call	WriteString
- 0000002F  5A		     1		pop		EDX
+ 00000000  68 000000D1 R		push	OFFSET prompt
+ 00000005  68 000000F1 R		push	OFFSET userInput
+ 0000000A  68 000000FC R		push	OFFSET userInputLen
+ 0000000F  E8 00000007			call	ReadVal
+					;mDisplayString	OFFSET userInput
 
 					Invoke ExitProcess,0	; exit to operating system
- 00000030  6A 00	   *	    push   +000000000h
- 00000032  E8 00000000 E   *	    call   ExitProcess
- 00000037			main ENDP
+ 00000014  6A 00	   *	    push   +000000000h
+ 00000016  E8 00000000 E   *	    call   ExitProcess
+ 0000001B			main ENDP
 
 				; (insert additional procedures here)
 
+ 0000001B			ReadVal PROC USES EBP
+ 0000001B  55		   *	    push   ebp
+ 0000001C  8B EC			mov  EBP, ESP
+
+					mGetString		[EBP + 16], [EBP + 12], MAX_USER_INPUT_SIZE, [EBP + 8]
+ 0000001E  52		     1		push	EDX
+ 0000001F  51		     1		push	ECX
+ 00000020  50		     1		push	EAX
+ 00000021  8B 55 10	     1		mov		EDX, [EBP + 16]
+ 00000024  E8 00000000 E     1		call	WriteString
+ 00000029  8B 55 0C	     1		mov		EDX, [EBP + 12]
+ 0000002C  B9 0000000B	     1		mov		ECX, MAX_USER_INPUT_SIZE
+ 00000031  E8 00000000 E     1		call	ReadString
+ 00000036  A3 000000FC R     1		mov		userInputLen, EAX
+ 0000003B  58		     1		pop		EAX
+ 0000003C  59		     1		pop		ECX
+ 0000003D  5A		     1		pop		EDX
+					
+					RET
+ 0000003E  5D		   *	    pop    ebp
+ 0000003F  C3		   *	    ret    00000h
+ 00000040			ReadVal ENDP
+
 				END main
-Microsoft (R) Macro Assembler Version 14.28.29914.0	    05/30/21 00:44:29
+Microsoft (R) Macro Assembler Version 14.28.29914.0	    05/30/21 20:30:27
 #Program Template     (template.asm			     Symbols 2 - 1
 
 
@@ -259,8 +270,8 @@ Segments and Groups:
 
 FLAT . . . . . . . . . . . . . .	GROUP
 STACK  . . . . . . . . . . . . .	32 Bit	 00001000 Para	  Stack	  'STACK'	 
-_DATA  . . . . . . . . . . . . .	32 Bit	 00000100 Para	  Public  'DATA'	
-_TEXT  . . . . . . . . . . . . .	32 Bit	 00000037 Para	  Public  'CODE'	
+_DATA  . . . . . . . . . . . . .	32 Bit	 00000104 Para	  Public  'DATA'	
+_TEXT  . . . . . . . . . . . . .	32 Bit	 00000040 Para	  Public  'CODE'	
 
 
 Procedures, parameters, and locals:
@@ -330,6 +341,7 @@ ReadInt  . . . . . . . . . . . .	P Near	 00000000 FLAT	Length= 00000000 External
 ReadKeyFlush . . . . . . . . . .	P Near	 00000000 FLAT	Length= 00000000 External STDCALL
 ReadKey  . . . . . . . . . . . .	P Near	 00000000 FLAT	Length= 00000000 External STDCALL
 ReadString . . . . . . . . . . .	P Near	 00000000 FLAT	Length= 00000000 External STDCALL
+ReadVal  . . . . . . . . . . . .	P Near	 0000001B _TEXT	Length= 00000025 Public STDCALL
 SetConsoleCursorInfo . . . . . .	P Near	 00000000 FLAT	Length= 00000000 External STDCALL
 SetConsoleCursorPosition . . . .	P Near	 00000000 FLAT	Length= 00000000 External STDCALL
 SetConsoleMode . . . . . . . . .	P Near	 00000000 FLAT	Length= 00000000 External STDCALL
@@ -367,7 +379,7 @@ WriteStackFrame  . . . . . . . .	P Near	 00000000 FLAT	Length= 00000000 External
 WriteString  . . . . . . . . . .	P Near	 00000000 FLAT	Length= 00000000 External STDCALL
 WriteToFile  . . . . . . . . . .	P Near	 00000000 FLAT	Length= 00000000 External STDCALL
 WriteWindowsMsg  . . . . . . . .	P Near	 00000000 FLAT	Length= 00000000 External STDCALL
-main . . . . . . . . . . . . . .	P Near	 00000000 _TEXT	Length= 00000037 Public STDCALL
+main . . . . . . . . . . . . . .	P Near	 00000000 _TEXT	Length= 0000001B Public STDCALL
 printf . . . . . . . . . . . . .	P Near	 00000000 FLAT	Length= 00000000 External C
 scanf  . . . . . . . . . . . . .	P Near	 00000000 FLAT	Length= 00000000 External C
 wsprintfA  . . . . . . . . . . .	P Near	 00000000 FLAT	Length= 00000000 External C
@@ -613,6 +625,7 @@ prompt . . . . . . . . . . . . .	Byte	 000000D1 _DATA
 red  . . . . . . . . . . . . . .	Number	 00000004h   
 userInputLen . . . . . . . . . .	DWord	 000000FC _DATA	
 userInput  . . . . . . . . . . .	Byte	 000000F1 _DATA	
+userNum  . . . . . . . . . . . .	DWord	 00000100 _DATA	
 white  . . . . . . . . . . . . .	Number	 0000000Fh   
 wsprintf . . . . . . . . . . . .	Text   	 wsprintfA
 yellow . . . . . . . . . . . . .	Number	 0000000Eh   
