@@ -1,4 +1,4 @@
-Microsoft (R) Macro Assembler Version 14.28.29914.0	    06/01/21 00:51:38
+Microsoft (R) Macro Assembler Version 14.28.29914.0	    06/02/21 01:00:56
 #Program Template     (template.asm			     Page 1 - 1
 
 
@@ -130,24 +130,23 @@ Microsoft (R) Macro Assembler Version 14.28.29914.0	    06/01/21 00:51:38
  00000104  0000000A [		userNums		SDWORD		10 DUP(?)
 	    00000000
 	   ]
- 0000012C 54 68 65 20 6E	errorMsg		BYTE		"The number you entered is invalid. Please try again.",13,10,0
+ 0000012C 54 68 65 20 6E	errorMsg		BYTE		"The number you entered is invalid. Try again.",0
 	   75 6D 62 65 72
 	   20 79 6F 75 20
 	   65 6E 74 65 72
 	   65 64 20 69 73
 	   20 69 6E 76 61
 	   6C 69 64 2E 20
-	   50 6C 65 61 73
-	   65 20 74 72 79
-	   20 61 67 61 69
-	   6E 2E 0D 0A 00
- 00000163 00000000		setNegative		DWORD		0
+	   54 72 79 20 61
+	   67 61 69 6E 2E
+	   00
+ 0000015A 00000000		setNegative		DWORD		0
 
  00000000			.code
  00000000			main PROC
 
  00000000  68 00000104 R		push	OFFSET userNums
- 00000005  68 00000163 R		push	OFFSET setNegative
+ 00000005  68 0000015A R		push	OFFSET setNegative
  0000000A  68 0000012C R		push	OFFSET errorMsg
  0000000F  68 000000D1 R		push	OFFSET prompt
  00000014  68 000000F1 R		push	OFFSET userInput
@@ -184,70 +183,90 @@ Microsoft (R) Macro Assembler Version 14.28.29914.0	    06/01/21 00:51:38
  00000053  58		     1		pop		EAX
  00000054  59		     1		pop		ECX
  00000055  5A		     1		pop		EDX
-						
+
  00000056  8B 4D 08				mov		ECX, [EBP + 8]			; set ECX as the count of userInput
  00000059  8B 01				mov		EAX, [ECX]
  0000005B  8B C8				mov		ECX, EAX
 
  0000005D  8B 75 0C				mov		ESI, [EBP + 12]			; reset userInput mem location
- 00000060  53					push	EBX
 						
- 00000061  BB 00000000				mov		EBX, 0
- 00000066  89 5D 18				mov		[EBP + 24], EBX			; reset negation variable
-						
- 00000069  FC					cld
+ 00000060  BB 00000000				mov		EBX, 0
+ 00000065  89 5D 18				mov		[EBP + 24], EBX			; reset negation variable
 
- 0000006A				_checkSign:
- 0000006A  AC					lodsb
- 0000006B  3C 2D				cmp		AL, 45
- 0000006D  74 02				je		_setNegative
- 0000006F  EB 0E				jmp		_validate
 
- 00000071				_setNegative:
- 00000071  53					push	EBX
- 00000072  BB 00000001				mov		EBX, 1
- 00000077  89 5D 18				mov		[EBP + 24], EBX
- 0000007A  5B					pop		EBX
+ 00000068				_checkSign:
+ 00000068  AC					lodsb
+ 00000069  3C 2D				cmp		AL, 45
+ 0000006B  74 02				je		_setNegative
+ 0000006D  EB 0E				jmp		_validate
 
- 0000007B				_moveForward:
- 0000007B  FC					cld
- 0000007C  AC					lodsb
- 0000007D  EB 00				jmp		_validate
+ 0000006F				_setNegative:
+ 0000006F  53					push	EBX
+ 00000070  BB 00000001				mov		EBX, 1
+ 00000075  89 5D 18				mov		[EBP + 24], EBX
+ 00000078  5B					pop		EBX
 
- 0000007F				_validate:
- 0000007F  3C 30				cmp		AL, 48
- 00000081  72 06				jb		_invalid
- 00000083  3C 39				cmp		AL, 57
- 00000085  77 02				ja		_invalid
- 00000087  EB 0C				jmp		_accumulate
+ 00000079				_moveForward:
+ 00000079  FC					cld
+ 0000007A  AC					lodsb
+ 0000007B  EB 00				jmp		_validate
 
- 00000089				_invalid:
+ 0000007D				_validate:
+ 0000007D  3C 30				cmp		AL, 48
+ 0000007F  72 06				jb		_invalid
+ 00000081  3C 39				cmp		AL, 57
+ 00000083  77 02				ja		_invalid
+ 00000085  EB 11				jmp		_accumulate
+
+ 00000087				_invalid:
 						mDisplayString		[EBP + 20]
- 00000089  52		     1		push	EDX
- 0000008A  8B 55 14	     1		mov		EDX, [EBP + 20]
- 0000008D  E8 00000000 E     1		call	WriteString
- 00000092  5A		     1		pop		EDX
- 00000093  EB A1				jmp		_prompt
+ 00000087  52		     1		push	EDX
+ 00000088  8B 55 14	     1		mov		EDX, [EBP + 20]
+ 0000008B  E8 00000000 E     1		call	WriteString
+ 00000090  5A		     1		pop		EDX
+ 00000091  E8 00000000 E			call	Crlf
+ 00000096  EB 9E				jmp		_prompt
 						
- 00000095				_accumulate:
- 00000095  2C 30				sub		AL, LO_NUM_ASCII
- 00000097  00 07				add		[EDI], AL
- 00000099  49					dec		ECX
- 0000009A  83 F9 00				cmp		ECX, 0
- 0000009D  77 DC				ja		_moveForward
+ 00000098				_accumulate:
+ 00000098  8B 1F				mov		EBX, [EDI]			; save prev accumulated value
+
+ 0000009A  50					push	EAX					; preserve EAX/AL
+ 0000009B  53					push	EBX
+ 0000009C  8B C3				mov		EAX, EBX			; 10 * (EAX <= EBX)
+ 0000009E  BB 0000000A				mov		EBX, 10
+ 000000A3  F7 E3				mul		EBX					; 0/ 1/ 10 in EAX
+ 000000A5  89 07				mov		[EDI], EAX
+ 000000A7  5B					pop		EBX
+ 000000A8  58					pop		EAX
+
+ 000000A9  2C 30				sub		AL, LO_NUM_ASCII
+ 000000AB  00 07				add		[EDI], AL
+
+						;add		EAX, EBX
+						;mov		[EDI], EAX
+
+ 000000AD  49					dec		ECX
+ 000000AE  83 F9 00				cmp		ECX, 0
+ 000000B1  77 C6				ja		_moveForward
 						;mov		EAX, [EDI]
 						;neg		EAX
 						;mov		[EDI], EAX
 
- 0000009F  83 C7 04				add		EDI, 4
- 000000A2  59					pop		ECX
- 000000A3  E2 91				loop	_prompt
+						;add		[EDI], EAX
+ 000000B3  83 C7 04				add		EDI, 4
+ 000000B6  59					pop		ECX
+ 000000B7  49					dec		ECX
+ 000000B8  83 F9 00				cmp		ECX, 0
+ 000000BB  74 05				je		_exit
+ 000000BD  E9 FFFFFF74				jmp		_prompt
+
+ 000000C2					_exit:
 					
- 000000A5  C3				RET
- 000000A6			ReadVal ENDP
+ 000000C2  C3				RET
+ 000000C3			ReadVal ENDP
 
 				END main
-Microsoft (R) Macro Assembler Version 14.28.29914.0	    06/01/21 00:51:38
+Microsoft (R) Macro Assembler Version 14.28.29914.0	    06/02/21 01:00:56
 #Program Template     (template.asm			     Symbols 2 - 1
 
 
@@ -349,8 +368,8 @@ Segments and Groups:
 
 FLAT . . . . . . . . . . . . . .	GROUP
 STACK  . . . . . . . . . . . . .	32 Bit	 00001000 Para	  Stack	  'STACK'	 
-_DATA  . . . . . . . . . . . . .	32 Bit	 00000167 Para	  Public  'DATA'	
-_TEXT  . . . . . . . . . . . . .	32 Bit	 000000A6 Para	  Public  'CODE'	
+_DATA  . . . . . . . . . . . . .	32 Bit	 0000015E Para	  Public  'DATA'	
+_TEXT  . . . . . . . . . . . . .	32 Bit	 000000C3 Para	  Public  'CODE'	
 
 
 Procedures, parameters, and locals:
@@ -420,14 +439,15 @@ ReadInt  . . . . . . . . . . . .	P Near	 00000000 FLAT	Length= 00000000 External
 ReadKeyFlush . . . . . . . . . .	P Near	 00000000 FLAT	Length= 00000000 External STDCALL
 ReadKey  . . . . . . . . . . . .	P Near	 00000000 FLAT	Length= 00000000 External STDCALL
 ReadString . . . . . . . . . . .	P Near	 00000000 FLAT	Length= 00000000 External STDCALL
-ReadVal  . . . . . . . . . . . .	P Near	 0000002A _TEXT	Length= 0000007C Public STDCALL
+ReadVal  . . . . . . . . . . . .	P Near	 0000002A _TEXT	Length= 00000099 Public STDCALL
   _prompt  . . . . . . . . . . .	L Near	 00000036 _TEXT	
-  _checkSign . . . . . . . . . .	L Near	 0000006A _TEXT	
-  _setNegative . . . . . . . . .	L Near	 00000071 _TEXT	
-  _moveForward . . . . . . . . .	L Near	 0000007B _TEXT	
-  _validate  . . . . . . . . . .	L Near	 0000007F _TEXT	
-  _invalid . . . . . . . . . . .	L Near	 00000089 _TEXT	
-  _accumulate  . . . . . . . . .	L Near	 00000095 _TEXT	
+  _checkSign . . . . . . . . . .	L Near	 00000068 _TEXT	
+  _setNegative . . . . . . . . .	L Near	 0000006F _TEXT	
+  _moveForward . . . . . . . . .	L Near	 00000079 _TEXT	
+  _validate  . . . . . . . . . .	L Near	 0000007D _TEXT	
+  _invalid . . . . . . . . . . .	L Near	 00000087 _TEXT	
+  _accumulate  . . . . . . . . .	L Near	 00000098 _TEXT	
+  _exit  . . . . . . . . . . . .	L Near	 000000C2 _TEXT	
 SetConsoleCursorInfo . . . . . .	P Near	 00000000 FLAT	Length= 00000000 External STDCALL
 SetConsoleCursorPosition . . . .	P Near	 00000000 FLAT	Length= 00000000 External STDCALL
 SetConsoleMode . . . . . . . . .	P Near	 00000000 FLAT	Length= 00000000 External STDCALL
@@ -710,7 +730,7 @@ lightRed . . . . . . . . . . . .	Number	 0000000Ch
 magenta  . . . . . . . . . . . .	Number	 00000005h   
 prompt . . . . . . . . . . . . .	Byte	 000000D1 _DATA	
 red  . . . . . . . . . . . . . .	Number	 00000004h   
-setNegative  . . . . . . . . . .	DWord	 00000163 _DATA	
+setNegative  . . . . . . . . . .	DWord	 0000015A _DATA	
 userInputLen . . . . . . . . . .	DWord	 000000FC _DATA	
 userInput  . . . . . . . . . . .	Byte	 000000F1 _DATA	
 userNums . . . . . . . . . . . .	DWord	 00000104 _DATA	

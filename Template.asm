@@ -58,7 +58,7 @@ userInput		BYTE		MAX_USER_INPUT_SIZE DUP(?)
 userInputLen	DWORD		?
 userNum			SDWORD		?
 userNums		SDWORD		10 DUP(?)
-errorMsg		BYTE		"The number you entered is invalid. Please try again.",13,10,0
+errorMsg		BYTE		"The number you entered is invalid. Try again.",0
 setNegative		DWORD		0
 
 .code
@@ -88,18 +88,16 @@ ReadVal PROC
 
 	_prompt:
 		mGetString		[EBP + 16], [EBP + 12], MAX_USER_INPUT_SIZE, [EBP + 8]
-		
+
 		mov		ECX, [EBP + 8]			; set ECX as the count of userInput
 		mov		EAX, [ECX]
 		mov		ECX, EAX
 
 		mov		ESI, [EBP + 12]			; reset userInput mem location
-		push	EBX
 		
 		mov		EBX, 0
 		mov		[EBP + 24], EBX			; reset negation variable
-		
-		cld
+
 
 	_checkSign:
 		lodsb
@@ -127,11 +125,27 @@ ReadVal PROC
 
 	_invalid:
 		mDisplayString		[EBP + 20]
+		call	Crlf
 		jmp		_prompt
 		
 	_accumulate:
+		mov		EBX, [EDI]			; save prev accumulated value
+
+		push	EAX					; preserve EAX/AL
+		push	EBX
+		mov		EAX, EBX			; 10 * (EAX <= EBX)
+		mov		EBX, 10
+		mul		EBX					; 0/ 1/ 10 in EAX
+		mov		[EDI], EAX
+		pop		EBX
+		pop		EAX
+
 		sub		AL, LO_NUM_ASCII
 		add		[EDI], AL
+
+		;add		EAX, EBX
+		;mov		[EDI], EAX
+
 		dec		ECX
 		cmp		ECX, 0
 		ja		_moveForward
@@ -139,9 +153,15 @@ ReadVal PROC
 		;neg		EAX
 		;mov		[EDI], EAX
 
+		;add		[EDI], EAX
 		add		EDI, 4
 		pop		ECX
-		loop	_prompt
+		dec		ECX
+		cmp		ECX, 0
+		je		_exit
+		jmp		_prompt
+
+		_exit:
 	
 	RET
 ReadVal ENDP
