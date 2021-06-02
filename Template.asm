@@ -140,8 +140,8 @@ ReadVal PROC
 		pop		EBX
 		pop		EAX
 
-		sub		AL, LO_NUM_ASCII
-		add		[EDI], AL
+		sub		EAX, LO_NUM_ASCII
+		add		[EDI], EAX
 
 		;add		EAX, EBX
 		;mov		[EDI], EAX

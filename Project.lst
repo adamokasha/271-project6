@@ -1,4 +1,4 @@
-Microsoft (R) Macro Assembler Version 14.28.29914.0	    06/02/21 01:00:56
+Microsoft (R) Macro Assembler Version 14.28.29914.0	    06/02/21 01:08:05
 #Program Template     (template.asm			     Page 1 - 1
 
 
@@ -239,34 +239,34 @@ Microsoft (R) Macro Assembler Version 14.28.29914.0	    06/02/21 01:00:56
  000000A7  5B					pop		EBX
  000000A8  58					pop		EAX
 
- 000000A9  2C 30				sub		AL, LO_NUM_ASCII
- 000000AB  00 07				add		[EDI], AL
+ 000000A9  83 E8 30				sub		EAX, LO_NUM_ASCII
+ 000000AC  01 07				add		[EDI], EAX
 
 						;add		EAX, EBX
 						;mov		[EDI], EAX
 
- 000000AD  49					dec		ECX
- 000000AE  83 F9 00				cmp		ECX, 0
- 000000B1  77 C6				ja		_moveForward
+ 000000AE  49					dec		ECX
+ 000000AF  83 F9 00				cmp		ECX, 0
+ 000000B2  77 C5				ja		_moveForward
 						;mov		EAX, [EDI]
 						;neg		EAX
 						;mov		[EDI], EAX
 
 						;add		[EDI], EAX
- 000000B3  83 C7 04				add		EDI, 4
- 000000B6  59					pop		ECX
- 000000B7  49					dec		ECX
- 000000B8  83 F9 00				cmp		ECX, 0
- 000000BB  74 05				je		_exit
- 000000BD  E9 FFFFFF74				jmp		_prompt
+ 000000B4  83 C7 04				add		EDI, 4
+ 000000B7  59					pop		ECX
+ 000000B8  49					dec		ECX
+ 000000B9  83 F9 00				cmp		ECX, 0
+ 000000BC  74 05				je		_exit
+ 000000BE  E9 FFFFFF73				jmp		_prompt
 
- 000000C2					_exit:
+ 000000C3					_exit:
 					
- 000000C2  C3				RET
- 000000C3			ReadVal ENDP
+ 000000C3  C3				RET
+ 000000C4			ReadVal ENDP
 
 				END main
-Microsoft (R) Macro Assembler Version 14.28.29914.0	    06/02/21 01:00:56
+Microsoft (R) Macro Assembler Version 14.28.29914.0	    06/02/21 01:08:05
 #Program Template     (template.asm			     Symbols 2 - 1
 
 
@@ -369,7 +369,7 @@ Segments and Groups:
 FLAT . . . . . . . . . . . . . .	GROUP
 STACK  . . . . . . . . . . . . .	32 Bit	 00001000 Para	  Stack	  'STACK'	 
 _DATA  . . . . . . . . . . . . .	32 Bit	 0000015E Para	  Public  'DATA'	
-_TEXT  . . . . . . . . . . . . .	32 Bit	 000000C3 Para	  Public  'CODE'	
+_TEXT  . . . . . . . . . . . . .	32 Bit	 000000C4 Para	  Public  'CODE'	
 
 
 Procedures, parameters, and locals:
@@ -439,7 +439,7 @@ ReadInt  . . . . . . . . . . . .	P Near	 00000000 FLAT	Length= 00000000 External
 ReadKeyFlush . . . . . . . . . .	P Near	 00000000 FLAT	Length= 00000000 External STDCALL
 ReadKey  . . . . . . . . . . . .	P Near	 00000000 FLAT	Length= 00000000 External STDCALL
 ReadString . . . . . . . . . . .	P Near	 00000000 FLAT	Length= 00000000 External STDCALL
-ReadVal  . . . . . . . . . . . .	P Near	 0000002A _TEXT	Length= 00000099 Public STDCALL
+ReadVal  . . . . . . . . . . . .	P Near	 0000002A _TEXT	Length= 0000009A Public STDCALL
   _prompt  . . . . . . . . . . .	L Near	 00000036 _TEXT	
   _checkSign . . . . . . . . . .	L Near	 00000068 _TEXT	
   _setNegative . . . . . . . . .	L Near	 0000006F _TEXT	
@@ -447,7 +447,7 @@ ReadVal  . . . . . . . . . . . .	P Near	 0000002A _TEXT	Length= 00000099 Public 
   _validate  . . . . . . . . . .	L Near	 0000007D _TEXT	
   _invalid . . . . . . . . . . .	L Near	 00000087 _TEXT	
   _accumulate  . . . . . . . . .	L Near	 00000098 _TEXT	
-  _exit  . . . . . . . . . . . .	L Near	 000000C2 _TEXT	
+  _exit  . . . . . . . . . . . .	L Near	 000000C3 _TEXT	
 SetConsoleCursorInfo . . . . . .	P Near	 00000000 FLAT	Length= 00000000 External STDCALL
 SetConsoleCursorPosition . . . .	P Near	 00000000 FLAT	Length= 00000000 External STDCALL
 SetConsoleMode . . . . . . . . .	P Near	 00000000 FLAT	Length= 00000000 External STDCALL
