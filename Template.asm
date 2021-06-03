@@ -84,14 +84,16 @@ ReadVal PROC
 
 	mov		ECX, MAX_USER_INPUT_SIZE - 1	; sub 1 for sign when using as counter
 	mov		EDI, [EBP + 28]	
-	push	ECX
 
 	_prompt:
+		push	ECX
 		mGetString		[EBP + 16], [EBP + 12], MAX_USER_INPUT_SIZE, [EBP + 8]
 
-		mov		ECX, [EBP + 8]			; set ECX as the count of userInput
-		mov		EAX, [ECX]
-		mov		ECX, EAX
+		push	EAX
+		mov		EAX, [EBP + 8]			; set ECX as the count of userInput
+		mov		ECX, [EAX]
+		pop		EAX
+		;mov		ECX, EAX
 
 		mov		ESI, [EBP + 12]			; reset userInput mem location
 		
@@ -102,14 +104,16 @@ ReadVal PROC
 	_checkSign:
 		lodsb
 		cmp		AL, 45
-		je		_setNegative
+		je		_setNegativeFlag
 		jmp		_validate
 
-	_setNegative:
+	_setNegativeFlag:
 		push	EBX
 		mov		EBX, 1
 		mov		[EBP + 24], EBX
 		pop		EBX
+		dec		ECX
+
 
 	_moveForward:
 		cld
@@ -140,8 +144,8 @@ ReadVal PROC
 		pop		EBX
 		pop		EAX
 
-		sub		EAX, LO_NUM_ASCII
-		add		[EDI], EAX
+		sub		AL, LO_NUM_ASCII
+		add		[EDI], AL
 
 		;add		EAX, EBX
 		;mov		[EDI], EAX
@@ -149,21 +153,30 @@ ReadVal PROC
 		dec		ECX
 		cmp		ECX, 0
 		ja		_moveForward
-		;mov		EAX, [EDI]
-		;neg		EAX
-		;mov		[EDI], EAX
 
-		;add		[EDI], EAX
-		add		EDI, 4
-		pop		ECX
-		dec		ECX
-		cmp		ECX, 0
-		je		_exit
-		jmp		_prompt
+		push	EAX
+		mov		EAX, [EBP + 24]
+		cmp		EAX, 1
+		je		_negate
+		jmp		_continue
 
-		_exit:
+		_negate:
+			mov		EAX, [EDI]
+			neg		EAX
+			mov		[EDI], EAX
+		
+		
+
+		_continue:
+			pop		EAX
+			add		EDI, 4
+			pop		ECX
+			dec		ECX
+			cmp		ECX, 0
+			jnz		_prompt
 	
-	RET
+	pop		EBX
+	RET		24
 ReadVal ENDP
 
 END main
