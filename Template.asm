@@ -46,6 +46,7 @@ HI_NUM_ASCII = 57
 POS_ASCII	 = 43
 NEG_ASCII	 = 45
 MAX_USER_INPUT_SIZE = 11
+NULL_BIT	=	0
 
 
 .data
@@ -60,18 +61,25 @@ userNum			SDWORD		?
 userNums		SDWORD		10 DUP(?)
 errorMsg		BYTE		"The number you entered is invalid. Try again.",0
 setNegative		DWORD		0
+testInt			SDWORD		-103
+outString		BYTE		MAX_USER_INPUT_SIZE DUP(?)
+
 
 .code
 main PROC
 
-	push	OFFSET userNums
-	push	OFFSET setNegative
-	push	OFFSET errorMsg
-	push	OFFSET prompt
-	push	OFFSET userInput
-	push	OFFSET userInputLen
-	call	ReadVal
+	;push	OFFSET userNums
+	;push	OFFSET setNegative
+	;push	OFFSET errorMsg
+	;push	OFFSET prompt
+	;push	OFFSET userInput
+	;push	OFFSET userInputLen
+	;call	ReadVal
 	;mDisplayString	OFFSET userInput
+
+	push	OFFSET outString
+	push	testInt
+	call	WriteVal
 
 	Invoke ExitProcess,0	; exit to operating system
 main ENDP
@@ -181,5 +189,67 @@ ReadVal PROC
 	pop		EBX
 	RET		24
 ReadVal ENDP
+
+WriteVal PROC
+	push	EBP
+	mov		EBP, ESP
+
+	;mov		ESI, [EBP + 8]			; int address
+	mov		EDI, [EBP + 12]			; outString address
+	mov		EAX, [EBP + 8]	
+
+	_checkSign:
+		cmp		EAX, 0
+		jl		_negate
+		jmp		_pushNullBit
+		cld
+
+
+	_negate:
+		push	EAX
+		mov		AL, 45
+		stosb	
+		mDisplayString		[EBP + 12]
+
+		dec		EDI
+		
+		pop		EAX
+		neg		EAX			; convert to positive int
+
+		;mov		AL, 48
+		;stosb
+		;mDisplayString		[EBP + 12]
+
+	_pushNullBit:
+		push	0
+
+	_asciiConversion:
+		mov		EDX, 0
+		mov		EBX, 10
+		div		EBX
+		
+		mov		ECX, EDX
+		add		ECX, 48
+		push	ECX
+		cmp		EAX, 0
+		je		_popAndPrint
+		jmp		_asciiConversion
+
+	_popAndPrint:
+		pop		EAX
+
+		;mov		AL, EAX
+		stosb
+		mDisplayString		[EBP + 12]
+		dec		EDI
+
+		cmp		EAX, 0
+		je		_exitAsciiConversion
+		jmp		_popAndPrint
+
+	_exitAsciiConversion:
+		
+	RET
+WriteVal ENDP
 
 END main
