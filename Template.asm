@@ -130,6 +130,9 @@ ReadVal PROC
 	_invalid:
 		mDisplayString		[EBP + 20]
 		call	Crlf
+		pop		ECX					; restore ECX to outer loop count
+		mov		EBX, 0
+		mov		[EDI], EBX			; reset accumulated value in destination register
 		jmp		_prompt
 		
 	_accumulate:

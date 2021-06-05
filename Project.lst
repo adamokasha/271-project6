@@ -1,4 +1,4 @@
-Microsoft (R) Macro Assembler Version 14.28.29914.0	    06/03/21 01:08:27
+Microsoft (R) Macro Assembler Version 14.28.29914.0	    06/05/21 12:58:53
 #Program Template     (template.asm			     Page 1 - 1
 
 
@@ -220,7 +220,7 @@ Microsoft (R) Macro Assembler Version 14.28.29914.0	    06/03/21 01:08:27
  00000080  72 06				jb		_invalid
  00000082  3C 39				cmp		AL, 57
  00000084  77 02				ja		_invalid
- 00000086  EB 11				jmp		_accumulate
+ 00000086  EB 19				jmp		_accumulate
 
  00000088				_invalid:
 						mDisplayString		[EBP + 20]
@@ -229,57 +229,60 @@ Microsoft (R) Macro Assembler Version 14.28.29914.0	    06/03/21 01:08:27
  0000008C  E8 00000000 E     1		call	WriteString
  00000091  5A		     1		pop		EDX
  00000092  E8 00000000 E			call	Crlf
- 00000097  EB 9C				jmp		_prompt
+ 00000097  59					pop		ECX					; restore ECX to outer loop count
+ 00000098  BB 00000000				mov		EBX, 0
+ 0000009D  89 1F				mov		[EDI], EBX			; reset accumulated value in destination register
+ 0000009F  EB 94				jmp		_prompt
 						
- 00000099				_accumulate:
- 00000099  8B 1F				mov		EBX, [EDI]			; save prev accumulated value
+ 000000A1				_accumulate:
+ 000000A1  8B 1F				mov		EBX, [EDI]			; save prev accumulated value
 
- 0000009B  50					push	EAX					; preserve EAX/AL
- 0000009C  53					push	EBX
- 0000009D  8B C3				mov		EAX, EBX			; 10 * (EAX <= EBX)
- 0000009F  BB 0000000A				mov		EBX, 10
- 000000A4  F7 E3				mul		EBX					; 0/ 1/ 10 in EAX
- 000000A6  89 07				mov		[EDI], EAX
- 000000A8  5B					pop		EBX
- 000000A9  58					pop		EAX
+ 000000A3  50					push	EAX					; preserve EAX/AL
+ 000000A4  53					push	EBX
+ 000000A5  8B C3				mov		EAX, EBX			; 10 * (EAX <= EBX)
+ 000000A7  BB 0000000A				mov		EBX, 10
+ 000000AC  F7 E3				mul		EBX					; 0/ 1/ 10 in EAX
+ 000000AE  89 07				mov		[EDI], EAX
+ 000000B0  5B					pop		EBX
+ 000000B1  58					pop		EAX
 
- 000000AA  2C 30				sub		AL, LO_NUM_ASCII
- 000000AC  00 07				add		[EDI], AL
+ 000000B2  2C 30				sub		AL, LO_NUM_ASCII
+ 000000B4  00 07				add		[EDI], AL
 
 						;add		EAX, EBX
 						;mov		[EDI], EAX
 
- 000000AE  49					dec		ECX
- 000000AF  83 F9 00				cmp		ECX, 0
- 000000B2  77 C6				ja		_moveForward
+ 000000B6  49					dec		ECX
+ 000000B7  83 F9 00				cmp		ECX, 0
+ 000000BA  77 BE				ja		_moveForward
 
- 000000B4  50					push	EAX
- 000000B5  8B 45 18				mov		EAX, [EBP + 24]
- 000000B8  83 F8 01				cmp		EAX, 1
- 000000BB  74 02				je		_negate
- 000000BD  EB 06				jmp		_continue
+ 000000BC  50					push	EAX
+ 000000BD  8B 45 18				mov		EAX, [EBP + 24]
+ 000000C0  83 F8 01				cmp		EAX, 1
+ 000000C3  74 02				je		_negate
+ 000000C5  EB 06				jmp		_continue
 
- 000000BF					_negate:
- 000000BF  8B 07					mov		EAX, [EDI]
- 000000C1  F7 D8					neg		EAX
- 000000C3  89 07					mov		[EDI], EAX
+ 000000C7					_negate:
+ 000000C7  8B 07					mov		EAX, [EDI]
+ 000000C9  F7 D8					neg		EAX
+ 000000CB  89 07					mov		[EDI], EAX
 						
 						
 
- 000000C5					_continue:
- 000000C5  58						pop		EAX
- 000000C6  83 C7 04					add		EDI, 4
- 000000C9  59						pop		ECX
- 000000CA  49						dec		ECX
- 000000CB  83 F9 00					cmp		ECX, 0
- 000000CE  0F 85 FFFFFF61				jnz		_prompt
+ 000000CD					_continue:
+ 000000CD  58						pop		EAX
+ 000000CE  83 C7 04					add		EDI, 4
+ 000000D1  59						pop		ECX
+ 000000D2  49						dec		ECX
+ 000000D3  83 F9 00					cmp		ECX, 0
+ 000000D6  0F 85 FFFFFF59				jnz		_prompt
 					
- 000000D4  5B				pop		EBX
- 000000D5  C2 0018			RET		24
- 000000D8			ReadVal ENDP
+ 000000DC  5B				pop		EBX
+ 000000DD  C2 0018			RET		24
+ 000000E0			ReadVal ENDP
 
 				END main
-Microsoft (R) Macro Assembler Version 14.28.29914.0	    06/03/21 01:08:27
+Microsoft (R) Macro Assembler Version 14.28.29914.0	    06/05/21 12:58:53
 #Program Template     (template.asm			     Symbols 2 - 1
 
 
@@ -382,7 +385,7 @@ Segments and Groups:
 FLAT . . . . . . . . . . . . . .	GROUP
 STACK  . . . . . . . . . . . . .	32 Bit	 00001000 Para	  Stack	  'STACK'	 
 _DATA  . . . . . . . . . . . . .	32 Bit	 0000015E Para	  Public  'DATA'	
-_TEXT  . . . . . . . . . . . . .	32 Bit	 000000D8 Para	  Public  'CODE'	
+_TEXT  . . . . . . . . . . . . .	32 Bit	 000000E0 Para	  Public  'CODE'	
 
 
 Procedures, parameters, and locals:
@@ -452,16 +455,16 @@ ReadInt  . . . . . . . . . . . .	P Near	 00000000 FLAT	Length= 00000000 External
 ReadKeyFlush . . . . . . . . . .	P Near	 00000000 FLAT	Length= 00000000 External STDCALL
 ReadKey  . . . . . . . . . . . .	P Near	 00000000 FLAT	Length= 00000000 External STDCALL
 ReadString . . . . . . . . . . .	P Near	 00000000 FLAT	Length= 00000000 External STDCALL
-ReadVal  . . . . . . . . . . . .	P Near	 0000002A _TEXT	Length= 000000AE Public STDCALL
+ReadVal  . . . . . . . . . . . .	P Near	 0000002A _TEXT	Length= 000000B6 Public STDCALL
   _prompt  . . . . . . . . . . .	L Near	 00000035 _TEXT	
   _checkSign . . . . . . . . . .	L Near	 00000068 _TEXT	
   _setNegativeFlag . . . . . . .	L Near	 0000006F _TEXT	
   _moveForward . . . . . . . . .	L Near	 0000007A _TEXT	
   _validate  . . . . . . . . . .	L Near	 0000007E _TEXT	
   _invalid . . . . . . . . . . .	L Near	 00000088 _TEXT	
-  _accumulate  . . . . . . . . .	L Near	 00000099 _TEXT	
-  _negate  . . . . . . . . . . .	L Near	 000000BF _TEXT	
-  _continue  . . . . . . . . . .	L Near	 000000C5 _TEXT	
+  _accumulate  . . . . . . . . .	L Near	 000000A1 _TEXT	
+  _negate  . . . . . . . . . . .	L Near	 000000C7 _TEXT	
+  _continue  . . . . . . . . . .	L Near	 000000CD _TEXT	
 SetConsoleCursorInfo . . . . . .	P Near	 00000000 FLAT	Length= 00000000 External STDCALL
 SetConsoleCursorPosition . . . .	P Near	 00000000 FLAT	Length= 00000000 External STDCALL
 SetConsoleMode . . . . . . . . .	P Near	 00000000 FLAT	Length= 00000000 External STDCALL
