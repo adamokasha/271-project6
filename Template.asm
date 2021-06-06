@@ -70,7 +70,9 @@ setNegative			DWORD		0
 testInt				SDWORD		-103
 testArr				SDWORD		-103, -109, 110, -2000, 2000, -1, 0, 89, 101, 99
 outString			BYTE		1 DUP(?)
-
+avgString			BYTE		1 DUP(?)
+sum					SDWORD		0
+average				SDWORD		0
 
 .code
 main PROC
@@ -83,13 +85,13 @@ main PROC
 	mDisplayString  OFFSET intro4
 	call	Crlf
 	
-	push	OFFSET userNums
-	push	OFFSET setNegative
-	push	OFFSET errorMsg
-	push	OFFSET prompt
-	push	OFFSET userInput
-	push	OFFSET userInputLen
-	call	ReadVal
+	;push	OFFSET userNums
+	;push	OFFSET setNegative
+	;push	OFFSET errorMsg
+	;push	OFFSET prompt
+	;push	OFFSET userInput
+	;push	OFFSET userInputLen
+	;call	ReadVal
 
 	call	Crlf
 
@@ -99,22 +101,35 @@ main PROC
 	mDisplayString OFFSET numbersEnteredMsg
 	call	Crlf
 
-	push	OFFSET outString
-	push	OFFSET userNums
-	call	DisplayNumbers
-
-	call	Crlf
-	call	Crlf
-
 	;push	OFFSET outString
-	;push	OFFSET testArr
-	;call	DisplayAverage
+	;push	OFFSET userNums
+	;call	DisplayNumbers
 
-	push	OFFSET avgDisplayMsg
-	push	OFFSET sumDisplayMsg
+	call	Crlf
+	call	Crlf
+
+	push	OFFSET sum
 	push	OFFSET outString
-	push	OFFSET userNums
-	call	DisplayCalculations
+	push	OFFSET testArr
+	call	CalculateSum
+
+	push	OFFSET	outString
+	push	sum
+	call	WriteVal
+
+	push	OFFSET average
+	push	sum
+	call	CalculateAverage
+
+	push	OFFSET	outString
+	push	average
+	call	WriteVal
+
+	;push	OFFSET avgDisplayMsg
+	;push	OFFSET sumDisplayMsg
+	;push	OFFSET outString
+	;push	OFFSET userNums
+	;call	DisplayCalculations
 
 	call	Crlf
 
@@ -240,10 +255,13 @@ WriteVal PROC
 	mov		EBP, ESP
 
 	push	EAX
-	;mov		ESI, [EBP + 8]			; int address
-	mov		EDI, [EBP + 12]			; outString address
-	mov		EAX, [EBP + 8]
+	push	EBX
 	push	ECX
+	push	EDI
+
+
+	mov		EDI, [EBP + 12]			; outString address
+	mov		EAX, [EBP + 8]			; number to write to outString
 
 	_checkSign:
 		cmp		EAX, 0
@@ -262,10 +280,6 @@ WriteVal PROC
 		
 		pop		EAX
 		neg		EAX			; convert to positive int
-
-		;mov		AL, 48
-		;stosb
-		;mDisplayString		[EBP + 12]
 
 	_pushNullBit:
 		push	0
@@ -301,12 +315,13 @@ WriteVal PROC
 		mDisplayString		[EBP + 12]
 		dec		EDI
 		
-
+	pop		EDI
 	pop		ECX
+	pop		EBP
 	pop		EAX
 	pop		EBP
 
-	RET	8
+	RET	12
 WriteVal ENDP
 
 DisplayNumbers PROC
@@ -329,12 +344,20 @@ DisplayNumbers PROC
 	RET		8
 DisplayNumbers ENDP
 
-DisplayCalculations PROC
+CalculateSum PROC
 	push	EBP
 	mov		EBP, ESP
 
+	push	ESI
+	push	EAX
+	push	EBX
+	push	ECX
+
+
+
 	mov		ESI, [EBP + 8]		; input array
 	mov		EDI, [EBP + 12]		; outString
+	;mov		EBX, [EBP + 16]
 	mov		ECX, MAX_USER_INPUT_SIZE - 1
 
 	mov		EAX, 0
@@ -344,34 +367,91 @@ DisplayCalculations PROC
 		add		ESI, 4
 		loop	_sumNumbers
 
-	;push	EAX
+	mov		EBX, [ebp + 16]
+	mov		[EBX], EAX
 
-	mDisplayString [EBP + 16]
+	pop	ECX
+	pop	EBX
+	pop	EAX
+	pop	ESI
+	pop	EBP
+	
+	RET		16
+CalculateSum ENDP
 
-	push	EDI
+CalculateAverage PROC
+	push	EBP
+	mov		EBP, ESP
+	push	ECX
 	push	EAX
-	call	WriteVal
+	push	EBX
 
-	call	Crlf
 
-	;pop		EAX
 
+	mov		ECX, MAX_USER_INPUT_SIZE - 1
+	mov		EAX, [EBP + 8]		; sum
+	
 	_divide:
 		mov		EBX, MAX_USER_INPUT_SIZE - 1
 		mov		EDX, 0
 		cdq
 		idiv	EBX
 
-	mDisplayString [EBP + 20]
+	mov		EBX, [ebp + 12]
+	mov		[EBX], EAX
 
-	push	EDI
-	push	EAX
-	call	WriteVal
-
-	call	Crlf
-
+	pop		EBX
+	pop		EAX
+	pop		ECX
 	pop		EBP
-	RET		8
-DisplayCalculations ENDP
+
+	RET		12
+CalculateAverage ENDP
+
+
+;DisplayCalculations PROC
+;	push	EBP
+;	mov		EBP, ESP
+;
+;	mov		ESI, [EBP + 8]		; input array
+;	mov		EDI, [EBP + 12]		; outString
+;	mov		ECX, MAX_USER_INPUT_SIZE - 1
+;
+;	mov		EAX, 0
+;
+;	_sumNumbers:
+;		add		EAX, [ESI]
+;		add		ESI, 4
+;		loop	_sumNumbers
+;
+;	;push	EAX
+;
+;	mDisplayString [EBP + 16]
+;
+;	push	EDI
+;	push	EAX
+;	call	WriteVal
+;
+;	call	Crlf
+;
+;	;pop		EAX
+;
+;	_divide:
+;		mov		EBX, MAX_USER_INPUT_SIZE - 1
+;		mov		EDX, 0
+;		cdq
+;		idiv	EBX
+;
+;	mDisplayString [EBP + 20]
+;
+;	push	EDI
+;	push	EAX
+;	call	WriteVal
+;
+;	call	Crlf
+;
+;	pop		EBP
+;	RET		8
+;DisplayCalculations ENDP
 
 END main
