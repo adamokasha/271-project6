@@ -1,4 +1,4 @@
-Microsoft (R) Macro Assembler Version 14.28.29914.0	    06/06/21 18:44:29
+Microsoft (R) Macro Assembler Version 14.28.29914.0	    06/06/21 18:57:45
 #Program Template     (template.asm			     Page 1 - 1
 
 
@@ -33,6 +33,25 @@ Microsoft (R) Macro Assembler Version 14.28.29914.0	    06/06/21 18:44:29
 			      C .LIST
 			      C 
 
+				;--------------------------------------------------------------------------
+				; name: mGetString
+				;
+				; Reads string input
+				;
+				; Precondition: none
+				;
+				; Postconditions: userNums SDWORD array will be filled with 10 SDWORD integers
+				;				  setNegative & userInputLen will be changed
+				;
+				; Receives: buffer			 = Message to write to prompt for input
+				;			usrInput		 = Empty BYTE array to hold user input (mem location of current index)
+				;			usrInputCount	 = The max allowed length of input
+				;			usrInputLen		 = Unitialized DWORD variable to caputre input length
+				;			
+				;
+				; Returns:  usrInput		 = User input string
+				;			usrInputLen		 = The length of the user input
+				;--------------------------------------------------------------------------
 				mGetString MACRO buffer, usrInput, usrInputCount, usrInputLen
 					push	EDX
 					push	ECX
@@ -50,6 +69,19 @@ Microsoft (R) Macro Assembler Version 14.28.29914.0	    06/06/21 18:44:29
 					pop		EDX
 				ENDM
 
+				;--------------------------------------------------------------------------
+				; name: mDisplayString
+				;
+				; Displays string passed to macro 
+				;
+				; Precondition: none
+				;
+				; Postconditions: none
+				;
+				; Receives: display_string	 = string to display			
+				;
+				; Returns:  none
+				;--------------------------------------------------------------------------
 				mDisplayString MACRO display_string
 					push	EDX
 
@@ -662,7 +694,7 @@ Microsoft (R) Macro Assembler Version 14.28.29914.0	    06/06/21 18:44:29
  000002AE			CalculateAverage ENDP
 
 				END main
-Microsoft (R) Macro Assembler Version 14.28.29914.0	    06/06/21 18:44:29
+Microsoft (R) Macro Assembler Version 14.28.29914.0	    06/06/21 18:57:45
 #Program Template     (template.asm			     Symbols 2 - 1
 
 

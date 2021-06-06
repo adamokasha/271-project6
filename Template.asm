@@ -12,6 +12,25 @@ TITLE Program Template     (template.asm)
 
 INCLUDE Irvine32.inc
 
+;--------------------------------------------------------------------------
+; name: mGetString
+;
+; Reads string input
+;
+; Precondition: none
+;
+; Postconditions: userNums SDWORD array will be filled with 10 SDWORD integers
+;				  setNegative & userInputLen will be changed
+;
+; Receives: buffer			 = Message to write to prompt for input
+;			usrInput		 = Empty BYTE array to hold user input (mem location of current index)
+;			usrInputCount	 = The max allowed length of input
+;			usrInputLen		 = Unitialized DWORD variable to caputre input length
+;			
+;
+; Returns:  usrInput		 = User input string
+;			usrInputLen		 = The length of the user input
+;--------------------------------------------------------------------------
 mGetString MACRO buffer, usrInput, usrInputCount, usrInputLen
 	push	EDX
 	push	ECX
@@ -29,6 +48,19 @@ mGetString MACRO buffer, usrInput, usrInputCount, usrInputLen
 	pop		EDX
 ENDM
 
+;--------------------------------------------------------------------------
+; name: mDisplayString
+;
+; Displays string passed to macro 
+;
+; Precondition: none
+;
+; Postconditions: none
+;
+; Receives: display_string	 = string to display			
+;
+; Returns:  none
+;--------------------------------------------------------------------------
 mDisplayString MACRO display_string
 	push	EDX
 
@@ -145,7 +177,7 @@ main ENDP
 ;				  setNegative & userInputLen will be changed
 ;
 ; Receives: [EBP + 8]	 = userInputLen (holds the length of user input)
-;			[EBP + 12]	 = userInput
+;			[EBP + 12]	 = userInput (string input array)
 ;			[EBP + 16]	 = prompt (Message)
 ;			[EBP + 20]	 = errorMsg
 ;			[EBP + 24]	 = setNegative (Acts as flag when a negative int entered)
