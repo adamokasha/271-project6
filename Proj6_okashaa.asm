@@ -1,4 +1,4 @@
-TITLE Program Template     (template.asm)
+TITLE Macros & String Primitives     (Proj6_okashaa.asm)
 
 ; Author: Adam Okasha
 ; Last Modified: 6 Jun 2021
