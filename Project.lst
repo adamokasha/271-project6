@@ -1,4 +1,4 @@
-Microsoft (R) Macro Assembler Version 14.28.29914.0	    06/06/21 14:53:09
+Microsoft (R) Macro Assembler Version 14.28.29914.0	    06/06/21 15:27:07
 #Program Template     (template.asm			     Page 1 - 1
 
 
@@ -487,7 +487,7 @@ Microsoft (R) Macro Assembler Version 14.28.29914.0	    06/06/21 14:53:09
 						
  000001D7  5F				pop		EDI
  000001D8  59				pop		ECX
- 000001D9  5D				pop		EBP
+ 000001D9  5B				pop		EBX
  000001DA  58				pop		EAX
  000001DB  5D				pop		EBP
 
@@ -625,7 +625,7 @@ Microsoft (R) Macro Assembler Version 14.28.29914.0	    06/06/21 14:53:09
 				;DisplayCalculations ENDP
 
 				END main
-Microsoft (R) Macro Assembler Version 14.28.29914.0	    06/06/21 14:53:09
+Microsoft (R) Macro Assembler Version 14.28.29914.0	    06/06/21 15:27:07
 #Program Template     (template.asm			     Symbols 2 - 1
 
 

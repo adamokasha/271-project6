@@ -317,7 +317,7 @@ WriteVal PROC
 		
 	pop		EDI
 	pop		ECX
-	pop		EBP
+	pop		EBX
 	pop		EAX
 	pop		EBP
 
