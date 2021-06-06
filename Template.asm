@@ -1,15 +1,36 @@
 TITLE Program Template     (template.asm)
 
-; Author: 
-; Last Modified:
-; OSU email address: ONID_ID@oregonstate.edu
-; Course number/section:   CS271 Section ???
-; Project Number:                 Due Date:
-; Description: This file is provided as a template from which you may work
-;              when developing assembly projects in CS271.
+; Author: Adam Okasha
+; Last Modified: 6 Jun 2021
+; OSU email address: okashaa@oregonstate.edu
+; Course number/section:   CS271 Section 400
+; Project Number:  6               Due Date: 6 Jun 2021
+; Description: This program reads in 10 integers that fit in a 32 bit register,
+;			   converts them to SDWORD integers and saves them in an array, 
+;			   converts them back to strings and displays them and their sums 
+;			   and averages as string. 
 
 INCLUDE Irvine32.inc
 
+;--------------------------------------------------------------------------
+; name: mGetString
+;
+; Reads string input
+;
+; Precondition: none
+;
+; Postconditions: userNums SDWORD array will be filled with 10 SDWORD integers
+;				  setNegative & userInputLen will be changed
+;
+; Receives: buffer			 = Message to write to prompt for input
+;			usrInput		 = Empty BYTE array to hold user input (mem location of current index)
+;			usrInputCount	 = The max allowed length of input
+;			usrInputLen		 = Unitialized DWORD variable to caputre input length
+;			
+;
+; Returns:  usrInput		 = User input string
+;			usrInputLen		 = The length of the user input
+;--------------------------------------------------------------------------
 mGetString MACRO buffer, usrInput, usrInputCount, usrInputLen
 	push	EDX
 	push	ECX
@@ -27,6 +48,19 @@ mGetString MACRO buffer, usrInput, usrInputCount, usrInputLen
 	pop		EDX
 ENDM
 
+;--------------------------------------------------------------------------
+; name: mDisplayString
+;
+; Displays string passed to macro 
+;
+; Precondition: none
+;
+; Postconditions: none
+;
+; Receives: display_string	 = string to display			
+;
+; Returns:  none
+;--------------------------------------------------------------------------
 mDisplayString MACRO display_string
 	push	EDX
 
@@ -44,6 +78,7 @@ POS_ASCII			= 43
 NEG_ASCII			= 45
 SPACE_ASCII			= 32
 MAX_USER_INPUT_SIZE = 11
+MAX_NUM_LENGTH		= 10
 NULL_BIT			= 0
 
 
@@ -101,7 +136,6 @@ main PROC
 	call	Crlf
 
 	push	OFFSET sum
-	push	OFFSET outString
 	push	OFFSET userNums
 	call	CalculateSum
 
@@ -131,8 +165,26 @@ main PROC
 	Invoke ExitProcess,0	; exit to operating system
 main ENDP
 
-; (insert additional procedures here)
-
+;--------------------------------------------------------------------------
+; name: ReadVal
+;
+; Reads integer input as string converting storing each number input into
+; an SDWORD array
+;
+; Precondition: none
+;
+; Postconditions: userNums SDWORD array will be filled with 10 SDWORD integers
+;				  setNegative & userInputLen will be changed
+;
+; Receives: [EBP + 8]	 = userInputLen (holds the length of user input)
+;			[EBP + 12]	 = userInput (string input array)
+;			[EBP + 16]	 = prompt (Message)
+;			[EBP + 20]	 = errorMsg
+;			[EBP + 24]	 = setNegative (Acts as flag when a negative int entered)
+;			[EBP + 28]	 = userNums (Array to saved converted string nums to SDWORD)
+;
+; Returns: userNums array filled with SDWORD ints
+;--------------------------------------------------------------------------
 ReadVal PROC
 	push	EBP
 	mov		EBP, ESP
@@ -143,7 +195,7 @@ ReadVal PROC
 	push	EDI
 	push	ESI
 
-	mov		ECX, MAX_USER_INPUT_SIZE - 1	; sub 1 for sign when using as counter
+	mov		ECX, MAX_NUM_LENGTH
 	mov		EDI, [EBP + 28]	
 
 	_prompt:
@@ -172,7 +224,7 @@ ReadVal PROC
 	_setNegativeFlag:
 		push	EBX
 		mov		EBX, 1
-		mov		[EBP + 24], EBX
+		mov		[EBP + 24], EBX			; modify setNegative to 1
 		pop		EBX
 		dec		ECX
 		jmp		_moveForward
@@ -221,7 +273,7 @@ ReadVal PROC
 		ja		_moveForward
 
 		push	EAX
-		mov		EAX, [EBP + 24]
+		mov		EAX, [EBP + 24]		; check is setNegative is 1, move to _negate
 		cmp		EAX, 1
 		je		_negate
 		jmp		_continue
@@ -250,6 +302,25 @@ ReadVal PROC
 	RET		28
 ReadVal ENDP
 
+;--------------------------------------------------------------------------
+; name: WriteVal
+;
+; Displays an integer by performing ASCII conversion and displaying string number
+; Reference: https://nancy-rubin.com/2020/02/18/tech-guide-how-are-decimal-numbers-converted-into-the-ascii-code
+; 1. Push null bit to indicate when each ASCII decimal number has been popped off stack 
+; 2. SDWORD int gets divided down by 10 consecutively until quotient is 0. 
+; 3. Each time 48 is added to remainder and pushed to stack
+; 4. The numbers are popped off the stack until 0 is encountered
+;
+; Precondition: none
+;
+; Postconditions: outSring will be modified 
+;
+; Receives: [EBP + 8]	 = userNums (SSWORD array)
+;			[EBP + 12]	 = outString address (1 byte, prints and moves back to start address to reuse)
+;
+; Returns: none
+;--------------------------------------------------------------------------
 WriteVal PROC
 	push	EBP
 	mov		EBP, ESP
@@ -280,7 +351,7 @@ WriteVal PROC
 		dec		EDI
 		
 		pop		EAX
-		neg		EAX			; convert to positive int
+		neg		EAX					; convert to positive int
 
 	_pushNullBit:
 		push	0
@@ -325,6 +396,20 @@ WriteVal PROC
 	RET	8
 WriteVal ENDP
 
+;--------------------------------------------------------------------------
+; name: DisplayNumbers
+;
+; Loops over SDWORD numbers array and call WriteVal to display the numbers
+;
+; Precondition: SDWORD array must be filled
+;
+; Postconditions: none 
+;
+; Receives: [EBP + 8]	   = SDWORD integer
+;			[EBP + 12]	   = outString address (1 byte, prints and moves back to start address to reuse)
+;			MAX_NUM_LENGTH = the length of SDWORD array
+; Returns: none
+;--------------------------------------------------------------------------
 DisplayNumbers PROC
 	push	EBP
 	mov		EBP, ESP
@@ -335,7 +420,7 @@ DisplayNumbers PROC
 
 	mov		ESI, [EBP + 8]					; input array
 	mov		EDI, [EBP + 12]					; outString
-	mov		ECX, MAX_USER_INPUT_SIZE - 1
+	mov		ECX, MAX_NUM_LENGTH
 
 	_printNumber:
 		push	EDI
@@ -351,6 +436,21 @@ DisplayNumbers PROC
 	RET		12
 DisplayNumbers ENDP
 
+;--------------------------------------------------------------------------
+; name: CalculateSum
+;
+; Loops over SDWORD numbers array calculates the sum
+;
+; Precondition: SDWORD array must be filled
+;
+; Postconditions: sum variable will be chaged 
+;
+; Receives: [EBP + 8]	   = SDWORD arrray
+;			[EBP + 12]	   = sum
+;			MAX_NUM_LENGTH = Array length used a loop counter
+;
+; Returns: sum
+;--------------------------------------------------------------------------
 CalculateSum PROC
 	push	EBP
 	mov		EBP, ESP
@@ -360,11 +460,8 @@ CalculateSum PROC
 	push	EBX
 	push	ECX
 
-
-
-	mov		ESI, [EBP + 8]		; input array
-	mov		EDI, [EBP + 12]		; outString
-	mov		ECX, MAX_USER_INPUT_SIZE - 1
+	mov		ESI, [EBP + 8]			; input array
+	mov		ECX, MAX_NUM_LENGTH
 
 	mov		EAX, 0
 
@@ -373,7 +470,7 @@ CalculateSum PROC
 		add		ESI, 4
 		loop	_sumNumbers
 
-	mov		EBX, [ebp + 16]
+	mov		EBX, [ebp + 12]
 	mov		[EBX], EAX
 
 	pop	ECX
@@ -382,9 +479,24 @@ CalculateSum PROC
 	pop	ESI
 	pop	EBP
 	
-	RET		16
+	RET		8
 CalculateSum ENDP
 
+
+;--------------------------------------------------------------------------
+; name: CalculateAverage
+;
+; Does signed integer division on passed in sum variable and set result in average variable
+;
+; Precondition: sum must have a value
+;
+; Postconditions: average variable will be chaged 
+;
+; Receives: [EBP + 8]	   = sum
+;			[EBP + 12]	   = average
+;
+; Returns: average
+;--------------------------------------------------------------------------
 CalculateAverage PROC
 	push	EBP
 	mov		EBP, ESP
@@ -392,18 +504,16 @@ CalculateAverage PROC
 	push	EAX
 	push	EBX
 
-
-
-	mov		ECX, MAX_USER_INPUT_SIZE - 1
-	mov		EAX, [EBP + 8]					; sum
+	mov		ECX, MAX_NUM_LENGTH
+	mov		EAX, [EBP + 8]					
 	
 	_divide:
-		mov		EBX, MAX_USER_INPUT_SIZE - 1
+		mov		EBX, MAX_NUM_LENGTH
 		mov		EDX, 0
 		cdq
 		idiv	EBX
 
-	mov		EBX, [ebp + 12]
+	mov		EBX, [ebp + 12]					
 	mov		[EBX], EAX
 
 	pop		EBX
