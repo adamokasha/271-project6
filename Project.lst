@@ -1,4 +1,4 @@
-Microsoft (R) Macro Assembler Version 14.28.29914.0	    06/06/21 19:18:53
+Microsoft (R) Macro Assembler Version 14.28.29914.0	    06/06/21 19:32:47
 2Macros & String Primitives     (Proj6_okashaa.asm	     Page 1 - 1
 
 
@@ -40,8 +40,7 @@ Microsoft (R) Macro Assembler Version 14.28.29914.0	    06/06/21 19:18:53
 				;
 				; Precondition: none
 				;
-				; Postconditions: userNums SDWORD array will be filled with 10 SDWORD integers
-				;				  setNegative & userInputLen will be changed
+				; Postconditions: usrInput byte array and usrInputLen will be modified
 				;
 				; Receives: buffer			 = Message to write to prompt for input
 				;			usrInput		 = Empty BYTE array to hold user input (mem location of current index)
@@ -694,7 +693,7 @@ Microsoft (R) Macro Assembler Version 14.28.29914.0	    06/06/21 19:18:53
  000002AE			CalculateAverage ENDP
 
 				END main
-Microsoft (R) Macro Assembler Version 14.28.29914.0	    06/06/21 19:18:53
+Microsoft (R) Macro Assembler Version 14.28.29914.0	    06/06/21 19:32:47
 2Macros & String Primitives     (Proj6_okashaa.asm	     Symbols 2 - 1
 
 

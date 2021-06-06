@@ -19,8 +19,7 @@ INCLUDE Irvine32.inc
 ;
 ; Precondition: none
 ;
-; Postconditions: userNums SDWORD array will be filled with 10 SDWORD integers
-;				  setNegative & userInputLen will be changed
+; Postconditions: usrInput byte array and usrInputLen will be modified
 ;
 ; Receives: buffer			 = Message to write to prompt for input
 ;			usrInput		 = Empty BYTE array to hold user input (mem location of current index)
