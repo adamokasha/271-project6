@@ -85,13 +85,13 @@ main PROC
 	mDisplayString  OFFSET intro4
 	call	Crlf
 	
-	;push	OFFSET userNums
-	;push	OFFSET setNegative
-	;push	OFFSET errorMsg
-	;push	OFFSET prompt
-	;push	OFFSET userInput
-	;push	OFFSET userInputLen
-	;call	ReadVal
+	push	OFFSET userNums
+	push	OFFSET setNegative
+	push	OFFSET errorMsg
+	push	OFFSET prompt
+	push	OFFSET userInput
+	push	OFFSET userInputLen
+	call	ReadVal
 
 	call	Crlf
 
@@ -102,7 +102,7 @@ main PROC
 	call	Crlf
 
 	push	OFFSET outString
-	push	OFFSET testArr
+	push	OFFSET userNums
 	call	DisplayNumbers
 
 	call	Crlf
@@ -110,16 +110,22 @@ main PROC
 
 	push	OFFSET sum
 	push	OFFSET outString
-	push	OFFSET testArr
+	push	OFFSET userNums
 	call	CalculateSum
+
+	mDisplayString  OFFSET sumDisplayMsg
 
 	push	OFFSET	outString
 	push	sum
 	call	WriteVal
 
+	call	Crlf
+
 	push	OFFSET average
 	push	sum
 	call	CalculateAverage
+
+	mDisplayString  OFFSET avgDisplayMsg
 
 	push	OFFSET	outString
 	push	average
