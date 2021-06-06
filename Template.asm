@@ -101,9 +101,9 @@ main PROC
 	mDisplayString OFFSET numbersEnteredMsg
 	call	Crlf
 
-	;push	OFFSET outString
-	;push	OFFSET userNums
-	;call	DisplayNumbers
+	push	OFFSET outString
+	push	OFFSET testArr
+	call	DisplayNumbers
 
 	call	Crlf
 	call	Crlf
@@ -258,6 +258,7 @@ WriteVal PROC
 	push	EBX
 	push	ECX
 	push	EDI
+	push	EDX
 
 
 	mov		EDI, [EBP + 12]			; outString address
@@ -314,19 +315,24 @@ WriteVal PROC
 		stosb
 		mDisplayString		[EBP + 12]
 		dec		EDI
-		
+	
+	pop		EDX
 	pop		EDI
 	pop		ECX
 	pop		EBX
 	pop		EAX
 	pop		EBP
 
-	RET	12
+	RET	8
 WriteVal ENDP
 
 DisplayNumbers PROC
 	push	EBP
 	mov		EBP, ESP
+
+	push	ESI
+	push	EDI
+	push	ECX
 
 	mov		ESI, [EBP + 8]		; input array
 	mov		EDI, [EBP + 12]		; outString
@@ -339,9 +345,11 @@ DisplayNumbers PROC
 		add		ESI, 4
 		loop	_printNumber
 
-
-	pop		EBP
-	RET		8
+	pop		ECX
+	pop		EDI
+	pop		ESI
+	pop		EBP	
+	RET		12
 DisplayNumbers ENDP
 
 CalculateSum PROC
