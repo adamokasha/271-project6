@@ -450,6 +450,21 @@ CalculateSum PROC
 	RET		8
 CalculateSum ENDP
 
+
+;--------------------------------------------------------------------------
+; name: CalculateAverage
+;
+; Does signed integer division on passed in sum variable and set result in average variable
+;
+; Precondition: sum must have a value
+;
+; Postconditions: average variable will be chaged 
+;
+; Receives: [EBP + 8]	   = sum
+;			[EBP + 12]	   = average
+;
+; Returns: average
+;--------------------------------------------------------------------------
 CalculateAverage PROC
 	push	EBP
 	mov		EBP, ESP
@@ -457,10 +472,8 @@ CalculateAverage PROC
 	push	EAX
 	push	EBX
 
-
-
 	mov		ECX, MAX_NUM_LENGTH
-	mov		EAX, [EBP + 8]					; sum
+	mov		EAX, [EBP + 8]					
 	
 	_divide:
 		mov		EBX, MAX_NUM_LENGTH
@@ -468,7 +481,7 @@ CalculateAverage PROC
 		cdq
 		idiv	EBX
 
-	mov		EBX, [ebp + 12]
+	mov		EBX, [ebp + 12]					
 	mov		[EBX], EAX
 
 	pop		EBX

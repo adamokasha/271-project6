@@ -1,4 +1,4 @@
-Microsoft (R) Macro Assembler Version 14.28.29914.0	    06/06/21 18:25:47
+Microsoft (R) Macro Assembler Version 14.28.29914.0	    06/06/21 18:44:29
 #Program Template     (template.asm			     Page 1 - 1
 
 
@@ -619,6 +619,21 @@ Microsoft (R) Macro Assembler Version 14.28.29914.0	    06/06/21 18:25:47
  00000284  C2 0008			RET		8
  00000287			CalculateSum ENDP
 
+
+				;--------------------------------------------------------------------------
+				; name: CalculateAverage
+				;
+				; Does signed integer division on passed in sum variable and set result in average variable
+				;
+				; Precondition: sum must have a value
+				;
+				; Postconditions: average variable will be chaged 
+				;
+				; Receives: [EBP + 8]	   = sum
+				;			[EBP + 12]	   = average
+				;
+				; Returns: average
+				;--------------------------------------------------------------------------
  00000287			CalculateAverage PROC
  00000287  55				push	EBP
  00000288  8B EC			mov		EBP, ESP
@@ -626,10 +641,8 @@ Microsoft (R) Macro Assembler Version 14.28.29914.0	    06/06/21 18:25:47
  0000028B  50				push	EAX
  0000028C  53				push	EBX
 
-
-
  0000028D  B9 0000000A			mov		ECX, MAX_NUM_LENGTH
- 00000292  8B 45 08			mov		EAX, [EBP + 8]					; sum
+ 00000292  8B 45 08			mov		EAX, [EBP + 8]					
 					
  00000295				_divide:
  00000295  BB 0000000A				mov		EBX, MAX_NUM_LENGTH
@@ -637,7 +650,7 @@ Microsoft (R) Macro Assembler Version 14.28.29914.0	    06/06/21 18:25:47
  0000029F  99					cdq
  000002A0  F7 FB				idiv	EBX
 
- 000002A2  8B 5D 0C			mov		EBX, [ebp + 12]
+ 000002A2  8B 5D 0C			mov		EBX, [ebp + 12]					
  000002A5  89 03			mov		[EBX], EAX
 
  000002A7  5B				pop		EBX
@@ -649,7 +662,7 @@ Microsoft (R) Macro Assembler Version 14.28.29914.0	    06/06/21 18:25:47
  000002AE			CalculateAverage ENDP
 
 				END main
-Microsoft (R) Macro Assembler Version 14.28.29914.0	    06/06/21 18:25:47
+Microsoft (R) Macro Assembler Version 14.28.29914.0	    06/06/21 18:44:29
 #Program Template     (template.asm			     Symbols 2 - 1
 
 
