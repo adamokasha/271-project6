@@ -36,15 +36,15 @@ mDisplayString MACRO display_string
 	pop		EDX
 ENDM
 
-LO			 = -2147483648
-HI			 = 2147483647
-LO_NUM_ASCII = 48
-HI_NUM_ASCII = 57
-POS_ASCII	 = 43
-NEG_ASCII	 = 45
-SPACE_ASCII	 = 32
+LO					= -2147483648
+HI					= 2147483647
+LO_NUM_ASCII		= 48
+HI_NUM_ASCII		= 57
+POS_ASCII			= 43
+NEG_ASCII			= 45
+SPACE_ASCII			= 32
 MAX_USER_INPUT_SIZE = 11
-NULL_BIT	=	0
+NULL_BIT			= 0
 
 
 .data
@@ -64,8 +64,6 @@ userNum				SDWORD		?
 userNums			SDWORD		10 DUP(?)
 errorMsg			BYTE		"The number you entered is invalid. Try again.",0
 setNegative			DWORD		0
-testInt				SDWORD		-103
-testArr				SDWORD		-103, -109, 110, -2000, 2000, -1, 0, 89, 101, 99
 outString			BYTE		1 DUP(?)
 avgString			BYTE		1 DUP(?)
 sum					SDWORD		0

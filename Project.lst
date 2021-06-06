@@ -1,4 +1,4 @@
-Microsoft (R) Macro Assembler Version 14.28.29914.0	    06/06/21 17:11:28
+Microsoft (R) Macro Assembler Version 14.28.29914.0	    06/06/21 17:14:58
 #Program Template     (template.asm			     Page 1 - 1
 
 
@@ -57,15 +57,15 @@ Microsoft (R) Macro Assembler Version 14.28.29914.0	    06/06/21 17:11:28
 					pop		EDX
 				ENDM
 
- =-80000000			LO			 = -2147483648
- = 7FFFFFFF			HI			 = 2147483647
- = 00000030			LO_NUM_ASCII = 48
- = 00000039			HI_NUM_ASCII = 57
- = 0000002B			POS_ASCII	 = 43
- = 0000002D			NEG_ASCII	 = 45
- = 00000020			SPACE_ASCII	 = 32
+ =-80000000			LO					= -2147483648
+ = 7FFFFFFF			HI					= 2147483647
+ = 00000030			LO_NUM_ASCII		= 48
+ = 00000039			HI_NUM_ASCII		= 57
+ = 0000002B			POS_ASCII			= 43
+ = 0000002D			NEG_ASCII			= 45
+ = 00000020			SPACE_ASCII			= 32
  = 0000000B			MAX_USER_INPUT_SIZE = 11
- = 00000000			NULL_BIT	=	0
+ = 00000000			NULL_BIT			= 0
 
 
  00000000			.data
@@ -167,25 +167,14 @@ Microsoft (R) Macro Assembler Version 14.28.29914.0	    06/06/21 17:11:28
 	   67 61 69 6E 2E
 	   00
  000001ED 00000000		setNegative			DWORD		0
- 000001F1 FFFFFF99		testInt				SDWORD		-103
- 000001F5 FFFFFF99		testArr				SDWORD		-103, -109, 110, -2000, 2000, -1, 0, 89, 101, 99
-	   FFFFFF93
-	   0000006E
-	   FFFFF830
-	   000007D0
-	   FFFFFFFF
-	   00000000
-	   00000059
-	   00000065
-	   00000063
- 0000021D  00000001 [		outString			BYTE		1 DUP(?)
+ 000001F1  00000001 [		outString			BYTE		1 DUP(?)
 	    00
 	   ]
- 0000021E  00000001 [		avgString			BYTE		1 DUP(?)
+ 000001F2  00000001 [		avgString			BYTE		1 DUP(?)
 	    00
 	   ]
- 0000021F 00000000		sum					SDWORD		0
- 00000223 00000000		average				SDWORD		0
+ 000001F3 00000000		sum					SDWORD		0
+ 000001F7 00000000		average				SDWORD		0
 
  00000000			.code
  00000000			main PROC
@@ -231,15 +220,15 @@ Microsoft (R) Macro Assembler Version 14.28.29914.0	    06/06/21 17:11:28
  0000006D  5A		     1		pop		EDX
  0000006E  E8 00000000 E		call	Crlf
 
- 00000073  68 0000021D R		push	OFFSET outString
+ 00000073  68 000001F1 R		push	OFFSET outString
  00000078  68 00000197 R		push	OFFSET userNums
  0000007D  E8 000001B8			call	DisplayNumbers
 
  00000082  E8 00000000 E		call	Crlf
  00000087  E8 00000000 E		call	Crlf
 
- 0000008C  68 0000021F R		push	OFFSET sum
- 00000091  68 0000021D R		push	OFFSET outString
+ 0000008C  68 000001F3 R		push	OFFSET sum
+ 00000091  68 000001F1 R		push	OFFSET outString
  00000096  68 00000197 R		push	OFFSET userNums
  0000009B  E8 000001BF			call	CalculateSum
 
@@ -249,14 +238,14 @@ Microsoft (R) Macro Assembler Version 14.28.29914.0	    06/06/21 17:11:28
  000000A6  E8 00000000 E     1		call	WriteString
  000000AB  5A		     1		pop		EDX
 
- 000000AC  68 0000021D R		push	OFFSET	outString
- 000000B1  FF 35 0000021F R		push	sum
+ 000000AC  68 000001F1 R		push	OFFSET	outString
+ 000000B1  FF 35 000001F3 R		push	sum
  000000B7  E8 00000110			call	WriteVal
 
  000000BC  E8 00000000 E		call	Crlf
 
- 000000C1  68 00000223 R		push	OFFSET average
- 000000C6  FF 35 0000021F R		push	sum
+ 000000C1  68 000001F7 R		push	OFFSET average
+ 000000C6  FF 35 000001F3 R		push	sum
  000000CC  E8 000001B9			call	CalculateAverage
 
 					mDisplayString  OFFSET avgDisplayMsg
@@ -265,8 +254,8 @@ Microsoft (R) Macro Assembler Version 14.28.29914.0	    06/06/21 17:11:28
  000000D7  E8 00000000 E     1		call	WriteString
  000000DC  5A		     1		pop		EDX
 
- 000000DD  68 0000021D R		push	OFFSET	outString
- 000000E2  FF 35 00000223 R		push	average
+ 000000DD  68 000001F1 R		push	OFFSET	outString
+ 000000E2  FF 35 000001F7 R		push	average
  000000E8  E8 000000DF			call	WriteVal
 
  000000ED  E8 00000000 E		call	Crlf
@@ -594,7 +583,7 @@ Microsoft (R) Macro Assembler Version 14.28.29914.0	    06/06/21 17:11:28
  000002B1			CalculateAverage ENDP
 
 				END main
-Microsoft (R) Macro Assembler Version 14.28.29914.0	    06/06/21 17:11:28
+Microsoft (R) Macro Assembler Version 14.28.29914.0	    06/06/21 17:14:58
 #Program Template     (template.asm			     Symbols 2 - 1
 
 
@@ -696,7 +685,7 @@ Segments and Groups:
 
 FLAT . . . . . . . . . . . . . .	GROUP
 STACK  . . . . . . . . . . . . .	32 Bit	 00001000 Para	  Stack	  'STACK'	 
-_DATA  . . . . . . . . . . . . .	32 Bit	 00000227 Para	  Public  'DATA'	
+_DATA  . . . . . . . . . . . . .	32 Bit	 000001FB Para	  Public  'DATA'	
 _TEXT  . . . . . . . . . . . . .	32 Bit	 000002B1 Para	  Public  'CODE'	
 
 
@@ -1056,9 +1045,9 @@ VK_UP  . . . . . . . . . . . . .	Number	 00000026h
 WINDOW_BUFFER_SIZE_EVENT . . . .	Number	 00000004h   
 WriteConsoleOutputCharacter  . .	Text   	 WriteConsoleOutputCharacterA
 WriteConsole . . . . . . . . . .	Text   	 WriteConsoleA
-average  . . . . . . . . . . . .	DWord	 00000223 _DATA	
+average  . . . . . . . . . . . .	DWord	 000001F7 _DATA	
 avgDisplayMsg  . . . . . . . . .	Byte	 0000016A _DATA	
-avgString  . . . . . . . . . . .	Byte	 0000021E _DATA	
+avgString  . . . . . . . . . . .	Byte	 000001F2 _DATA	
 black  . . . . . . . . . . . . .	Number	 00000000h   
 blue . . . . . . . . . . . . . .	Number	 00000001h   
 brown  . . . . . . . . . . . . .	Number	 00000006h   
@@ -1080,14 +1069,12 @@ lightMagenta . . . . . . . . . .	Number	 0000000Dh
 lightRed . . . . . . . . . . . .	Number	 0000000Ch   
 magenta  . . . . . . . . . . . .	Number	 00000005h   
 numbersEnteredMsg  . . . . . . .	Byte	 0000013C _DATA	
-outString  . . . . . . . . . . .	Byte	 0000021D _DATA	
+outString  . . . . . . . . . . .	Byte	 000001F1 _DATA	
 prompt . . . . . . . . . . . . .	Byte	 0000011C _DATA	
 red  . . . . . . . . . . . . . .	Number	 00000004h   
 setNegative  . . . . . . . . . .	DWord	 000001ED _DATA	
 sumDisplayMsg  . . . . . . . . .	Byte	 00000159 _DATA	
-sum  . . . . . . . . . . . . . .	DWord	 0000021F _DATA	
-testArr  . . . . . . . . . . . .	DWord	 000001F5 _DATA	
-testInt  . . . . . . . . . . . .	DWord	 000001F1 _DATA	
+sum  . . . . . . . . . . . . . .	DWord	 000001F3 _DATA	
 userInputLen . . . . . . . . . .	DWord	 0000018F _DATA	
 userInput  . . . . . . . . . . .	Byte	 00000184 _DATA	
 userNums . . . . . . . . . . . .	DWord	 00000197 _DATA	
