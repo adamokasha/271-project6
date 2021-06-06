@@ -1,4 +1,4 @@
-Microsoft (R) Macro Assembler Version 14.28.29914.0	    06/06/21 01:18:44
+Microsoft (R) Macro Assembler Version 14.28.29914.0	    06/06/21 01:19:54
 #Program Template     (template.asm			     Page 1 - 1
 
 
@@ -225,7 +225,7 @@ Microsoft (R) Macro Assembler Version 14.28.29914.0	    06/06/21 01:18:44
  00000079  68 00000110 R		push	OFFSET sumDisplayMsg
  0000007E  68 000001D4 R		push	OFFSET outString
  00000083  68 0000014E R		push	OFFSET userNums
- 00000088  E8 00000155			call	DisplayAverage
+ 00000088  E8 00000155			call	DisplayCalculations
 
  0000008D  E8 00000000 E		call	Crlf
 
@@ -468,7 +468,7 @@ Microsoft (R) Macro Assembler Version 14.28.29914.0	    06/06/21 01:18:44
  000001DF  C2 0008			RET		8
  000001E2			DisplayNumbers ENDP
 
- 000001E2			DisplayAverage PROC
+ 000001E2			DisplayCalculations PROC
  000001E2  55				push	EBP
  000001E3  8B EC			mov		EBP, ESP
 
@@ -519,10 +519,10 @@ Microsoft (R) Macro Assembler Version 14.28.29914.0	    06/06/21 01:18:44
 
  00000235  5D				pop		EBP
  00000236  C2 0008			RET		8
- 00000239			DisplayAverage ENDP
+ 00000239			DisplayCalculations ENDP
 
 				END main
-Microsoft (R) Macro Assembler Version 14.28.29914.0	    06/06/21 01:18:44
+Microsoft (R) Macro Assembler Version 14.28.29914.0	    06/06/21 01:19:54
 #Program Template     (template.asm			     Symbols 2 - 1
 
 
@@ -639,7 +639,7 @@ CreateFileA  . . . . . . . . . .	P Near	 00000000 FLAT	Length= 00000000 External
 CreateOutputFile . . . . . . . .	P Near	 00000000 FLAT	Length= 00000000 External STDCALL
 Crlf . . . . . . . . . . . . . .	P Near	 00000000 FLAT	Length= 00000000 External STDCALL
 Delay  . . . . . . . . . . . . .	P Near	 00000000 FLAT	Length= 00000000 External STDCALL
-DisplayAverage . . . . . . . . .	P Near	 000001E2 _TEXT	Length= 00000057 Public STDCALL
+DisplayCalculations  . . . . . .	P Near	 000001E2 _TEXT	Length= 00000057 Public STDCALL
   _sumNumbers  . . . . . . . . .	L Near	 000001F5 _TEXT	
   _divide  . . . . . . . . . . .	L Near	 00000212 _TEXT	
 DisplayNumbers . . . . . . . . .	P Near	 000001C3 _TEXT	Length= 0000001F Public STDCALL

@@ -113,7 +113,7 @@ main PROC
 	push	OFFSET sumDisplayMsg
 	push	OFFSET outString
 	push	OFFSET userNums
-	call	DisplayAverage
+	call	DisplayCalculations
 
 	call	Crlf
 
@@ -322,7 +322,7 @@ DisplayNumbers PROC
 	RET		8
 DisplayNumbers ENDP
 
-DisplayAverage PROC
+DisplayCalculations PROC
 	push	EBP
 	mov		EBP, ESP
 
@@ -365,6 +365,6 @@ DisplayAverage PROC
 
 	pop		EBP
 	RET		8
-DisplayAverage ENDP
+DisplayCalculations ENDP
 
 END main
