@@ -1,4 +1,4 @@
-Microsoft (R) Macro Assembler Version 14.28.29914.0	    06/06/21 18:21:43
+Microsoft (R) Macro Assembler Version 14.28.29914.0	    06/06/21 18:25:47
 #Program Template     (template.asm			     Page 1 - 1
 
 
@@ -573,6 +573,21 @@ Microsoft (R) Macro Assembler Version 14.28.29914.0	    06/06/21 18:21:43
  0000025C  C2 000C			RET		12
  0000025F			DisplayNumbers ENDP
 
+				;--------------------------------------------------------------------------
+				; name: CalculateSum
+				;
+				; Loops over SDWORD numbers array calculates the sum
+				;
+				; Precondition: SDWORD array must be filled
+				;
+				; Postconditions: sum variable will be chaged 
+				;
+				; Receives: [EBP + 8]	   = SDWORD arrray
+				;			[EBP + 12]	   = sum
+				;			MAX_NUM_LENGTH = Array length used a loop counter
+				;
+				; Returns: sum
+				;--------------------------------------------------------------------------
  0000025F			CalculateSum PROC
  0000025F  55				push	EBP
  00000260  8B EC			mov		EBP, ESP
@@ -582,9 +597,7 @@ Microsoft (R) Macro Assembler Version 14.28.29914.0	    06/06/21 18:21:43
  00000264  53				push	EBX
  00000265  51				push	ECX
 
-
-
- 00000266  8B 75 08			mov		ESI, [EBP + 8]		; input array
+ 00000266  8B 75 08			mov		ESI, [EBP + 8]			; input array
  00000269  B9 0000000A			mov		ECX, MAX_NUM_LENGTH
 
  0000026E  B8 00000000			mov		EAX, 0
@@ -636,7 +649,7 @@ Microsoft (R) Macro Assembler Version 14.28.29914.0	    06/06/21 18:21:43
  000002AE			CalculateAverage ENDP
 
 				END main
-Microsoft (R) Macro Assembler Version 14.28.29914.0	    06/06/21 18:21:43
+Microsoft (R) Macro Assembler Version 14.28.29914.0	    06/06/21 18:25:47
 #Program Template     (template.asm			     Symbols 2 - 1
 
 

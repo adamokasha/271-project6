@@ -404,6 +404,21 @@ DisplayNumbers PROC
 	RET		12
 DisplayNumbers ENDP
 
+;--------------------------------------------------------------------------
+; name: CalculateSum
+;
+; Loops over SDWORD numbers array calculates the sum
+;
+; Precondition: SDWORD array must be filled
+;
+; Postconditions: sum variable will be chaged 
+;
+; Receives: [EBP + 8]	   = SDWORD arrray
+;			[EBP + 12]	   = sum
+;			MAX_NUM_LENGTH = Array length used a loop counter
+;
+; Returns: sum
+;--------------------------------------------------------------------------
 CalculateSum PROC
 	push	EBP
 	mov		EBP, ESP
@@ -413,9 +428,7 @@ CalculateSum PROC
 	push	EBX
 	push	ECX
 
-
-
-	mov		ESI, [EBP + 8]		; input array
+	mov		ESI, [EBP + 8]			; input array
 	mov		ECX, MAX_NUM_LENGTH
 
 	mov		EAX, 0
