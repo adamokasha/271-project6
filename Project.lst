@@ -1,8 +1,8 @@
-Microsoft (R) Macro Assembler Version 14.28.29914.0	    06/06/21 18:57:45
-#Program Template     (template.asm			     Page 1 - 1
+Microsoft (R) Macro Assembler Version 14.28.29914.0	    06/06/21 19:03:40
+2Macros & String Primitives     (Proj6_okashaa.asm	     Page 1 - 1
 
 
-				TITLE Program Template     (template.asm)
+				TITLE Macros & String Primitives     (Proj6_okashaa.asm)
 
 				; Author: Adam Okasha
 				; Last Modified: 6 Jun 2021
@@ -318,7 +318,7 @@ Microsoft (R) Macro Assembler Version 14.28.29914.0	    06/06/21 18:57:45
 				;				  setNegative & userInputLen will be changed
 				;
 				; Receives: [EBP + 8]	 = userInputLen (holds the length of user input)
-				;			[EBP + 12]	 = userInput
+				;			[EBP + 12]	 = userInput (string input array)
 				;			[EBP + 16]	 = prompt (Message)
 				;			[EBP + 20]	 = errorMsg
 				;			[EBP + 24]	 = setNegative (Acts as flag when a negative int entered)
@@ -694,8 +694,8 @@ Microsoft (R) Macro Assembler Version 14.28.29914.0	    06/06/21 18:57:45
  000002AE			CalculateAverage ENDP
 
 				END main
-Microsoft (R) Macro Assembler Version 14.28.29914.0	    06/06/21 18:57:45
-#Program Template     (template.asm			     Symbols 2 - 1
+Microsoft (R) Macro Assembler Version 14.28.29914.0	    06/06/21 19:03:40
+2Macros & String Primitives     (Proj6_okashaa.asm	     Symbols 2 - 1
 
 
 
