@@ -152,7 +152,7 @@ main ENDP
 ;			[EBP + 24]	 = setNegative (Acts as flag when a negative int entered)
 ;			[EBP + 28]	 = userNums (Array to saved converted string nums to SDWORD)
 ;
-; Returns: none
+; Returns: userNums array filled with SDWORD ints
 ;--------------------------------------------------------------------------
 ReadVal PROC
 	push	EBP
@@ -271,6 +271,25 @@ ReadVal PROC
 	RET		28
 ReadVal ENDP
 
+;--------------------------------------------------------------------------
+; name: WriteVal
+;
+; Displays an integer by performing ASCII conversion and displaying string number
+; Reference: https://nancy-rubin.com/2020/02/18/tech-guide-how-are-decimal-numbers-converted-into-the-ascii-code
+; 1. Push null bit to indicate when each ASCII decimal number has been popped off stack 
+; 2. SDWORD int gets divided down by 10 consecutively until quotient is 0. 
+; 3. Each time 48 is added to remainder and pushed to stack
+; 4. The numbers are popped off the stack until 0 is encountered
+;
+; Precondition: none
+;
+; Postconditions: outSring will be modified 
+;
+; Receives: [EBP + 8]	 = SDWORD integer
+;			[EBP + 12]	 = outString (1 byte, prints and moves back to start address to reuse)
+;
+; Returns: none
+;--------------------------------------------------------------------------
 WriteVal PROC
 	push	EBP
 	mov		EBP, ESP
@@ -301,7 +320,7 @@ WriteVal PROC
 		dec		EDI
 		
 		pop		EAX
-		neg		EAX			; convert to positive int
+		neg		EAX					; convert to positive int
 
 	_pushNullBit:
 		push	0

@@ -1,4 +1,4 @@
-Microsoft (R) Macro Assembler Version 14.28.29914.0	    06/06/21 17:44:58
+Microsoft (R) Macro Assembler Version 14.28.29914.0	    06/06/21 18:06:12
 #Program Template     (template.asm			     Page 1 - 1
 
 
@@ -293,7 +293,7 @@ Microsoft (R) Macro Assembler Version 14.28.29914.0	    06/06/21 17:44:58
 				;			[EBP + 24]	 = setNegative (Acts as flag when a negative int entered)
 				;			[EBP + 28]	 = userNums (Array to saved converted string nums to SDWORD)
 				;
-				; Returns: none
+				; Returns: userNums array filled with SDWORD ints
 				;--------------------------------------------------------------------------
  0000010A			ReadVal PROC
  0000010A  55				push	EBP
@@ -428,6 +428,25 @@ Microsoft (R) Macro Assembler Version 14.28.29914.0	    06/06/21 17:44:58
  000001CE  C2 001C			RET		28
  000001D1			ReadVal ENDP
 
+				;--------------------------------------------------------------------------
+				; name: WriteVal
+				;
+				; Displays an integer by performing ASCII conversion and displaying string number
+				; Reference: https://nancy-rubin.com/2020/02/18/tech-guide-how-are-decimal-numbers-converted-into-the-ascii-code
+				; 1. Push null bit to indicate when each ASCII decimal number has been popped off stack 
+				; 2. SDWORD int gets divided down by 10 consecutively until quotient is 0. 
+				; 3. Each time 48 is added to remainder and pushed to stack
+				; 4. The numbers are popped off the stack until 0 is encountered
+				;
+				; Precondition: none
+				;
+				; Postconditions: outSring will be modified 
+				;
+				; Receives: [EBP + 8]	 = SDWORD integer
+				;			[EBP + 12]	 = outString (1 byte, prints and moves back to start address to reuse)
+				;
+				; Returns: none
+				;--------------------------------------------------------------------------
  000001D1			WriteVal PROC
  000001D1  55				push	EBP
  000001D2  8B EC			mov		EBP, ESP
@@ -462,7 +481,7 @@ Microsoft (R) Macro Assembler Version 14.28.29914.0	    06/06/21 17:44:58
  000001F5  4F					dec		EDI
 						
  000001F6  58					pop		EAX
- 000001F7  F7 D8				neg		EAX			; convert to positive int
+ 000001F7  F7 D8				neg		EAX					; convert to positive int
 
  000001F9				_pushNullBit:
  000001F9  6A 00				push	0
@@ -605,7 +624,7 @@ Microsoft (R) Macro Assembler Version 14.28.29914.0	    06/06/21 17:44:58
  000002B6			CalculateAverage ENDP
 
 				END main
-Microsoft (R) Macro Assembler Version 14.28.29914.0	    06/06/21 17:44:58
+Microsoft (R) Macro Assembler Version 14.28.29914.0	    06/06/21 18:06:12
 #Program Template     (template.asm			     Symbols 2 - 1
 
 
