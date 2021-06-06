@@ -1,4 +1,4 @@
-Microsoft (R) Macro Assembler Version 14.28.29914.0	    06/06/21 19:03:40
+Microsoft (R) Macro Assembler Version 14.28.29914.0	    06/06/21 19:18:53
 2Macros & String Primitives     (Proj6_okashaa.asm	     Page 1 - 1
 
 
@@ -509,7 +509,7 @@ Microsoft (R) Macro Assembler Version 14.28.29914.0	    06/06/21 19:03:40
  000001EA  E8 00000000 E     1		call	WriteString
  000001EF  5A		     1		pop		EDX
 
- 000001F0  4F					dec		EDI
+ 000001F0  4F					dec		EDI					; Move back to beginning of string (address)
 						
  000001F1  58					pop		EAX
  000001F2  F7 D8				neg		EAX					; convert to positive int
@@ -539,7 +539,7 @@ Microsoft (R) Macro Assembler Version 14.28.29914.0	    06/06/21 19:03:40
  00000212  8B 55 0C	     1		mov		EDX, [EBP + 12]
  00000215  E8 00000000 E     1		call	WriteString
  0000021A  5A		     1		pop		EDX
- 0000021B  4F					dec		EDI
+ 0000021B  4F					dec		EDI					; Move back to display again
 
  0000021C  83 F8 00				cmp		EAX, 0
  0000021F  74 02				je		_exitAsciiConversion
@@ -553,7 +553,7 @@ Microsoft (R) Macro Assembler Version 14.28.29914.0	    06/06/21 19:03:40
  00000227  8B 55 0C	     1		mov		EDX, [EBP + 12]
  0000022A  E8 00000000 E     1		call	WriteString
  0000022F  5A		     1		pop		EDX
- 00000230  4F					dec		EDI
+ 00000230  4F					dec		EDI					; Move back to reset for next use 
 					
  00000231  5A				pop		EDX
  00000232  5F				pop		EDI
@@ -694,7 +694,7 @@ Microsoft (R) Macro Assembler Version 14.28.29914.0	    06/06/21 19:03:40
  000002AE			CalculateAverage ENDP
 
 				END main
-Microsoft (R) Macro Assembler Version 14.28.29914.0	    06/06/21 19:03:40
+Microsoft (R) Macro Assembler Version 14.28.29914.0	    06/06/21 19:18:53
 2Macros & String Primitives     (Proj6_okashaa.asm	     Symbols 2 - 1
 
 

@@ -348,7 +348,7 @@ WriteVal PROC
 		stosb	
 		mDisplayString		[EBP + 12]
 
-		dec		EDI
+		dec		EDI					; Move back to beginning of string (address)
 		
 		pop		EAX
 		neg		EAX					; convert to positive int
@@ -374,7 +374,7 @@ WriteVal PROC
 
 		stosb
 		mDisplayString		[EBP + 12]
-		dec		EDI
+		dec		EDI					; Move back to display again
 
 		cmp		EAX, 0
 		je		_exitAsciiConversion
@@ -384,7 +384,7 @@ WriteVal PROC
 		mov		AL, SPACE_ASCII
 		stosb
 		mDisplayString		[EBP + 12]
-		dec		EDI
+		dec		EDI					; Move back to reset for next use 
 	
 	pop		EDX
 	pop		EDI
