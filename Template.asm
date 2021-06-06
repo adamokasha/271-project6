@@ -45,6 +45,7 @@ LO_NUM_ASCII = 48
 HI_NUM_ASCII = 57
 POS_ASCII	 = 43
 NEG_ASCII	 = 45
+SPACE_ASCII	 = 32
 MAX_USER_INPUT_SIZE = 11
 NULL_BIT	=	0
 
@@ -62,7 +63,8 @@ userNums		SDWORD		10 DUP(?)
 errorMsg		BYTE		"The number you entered is invalid. Try again.",0
 setNegative		DWORD		0
 testInt			SDWORD		-103
-outString		BYTE		MAX_USER_INPUT_SIZE DUP(?)
+testArr			SDWORD		-103, -109, 110, -2147483648, 2147483647, -1, 0, 89, 101, 99
+outString		BYTE		1 DUP(?)
 
 
 .code
@@ -77,9 +79,13 @@ main PROC
 	;call	ReadVal
 	;mDisplayString	OFFSET userInput
 
+	;push	OFFSET outString
+	;push	testInt
+	;call	WriteVal
+
 	push	OFFSET outString
-	push	testInt
-	call	WriteVal
+	push	OFFSET testArr
+	call	DisplayNumbers
 
 	Invoke ExitProcess,0	; exit to operating system
 main ENDP
@@ -196,7 +202,8 @@ WriteVal PROC
 
 	;mov		ESI, [EBP + 8]			; int address
 	mov		EDI, [EBP + 12]			; outString address
-	mov		EAX, [EBP + 8]	
+	mov		EAX, [EBP + 8]
+	push	ECX
 
 	_checkSign:
 		cmp		EAX, 0
@@ -224,6 +231,7 @@ WriteVal PROC
 		push	0
 
 	_asciiConversion:
+
 		mov		EDX, 0
 		mov		EBX, 10
 		div		EBX
@@ -248,8 +256,35 @@ WriteVal PROC
 		jmp		_popAndPrint
 
 	_exitAsciiConversion:
+		mov		AL, SPACE_ASCII
+		stosb
+		mDisplayString		[EBP + 12]
+		dec		EDI
 		
-	RET
+	pop		ECX
+	pop		EBP
+
+	RET	8
 WriteVal ENDP
+
+DisplayNumbers PROC
+	push	EBP
+	mov		EBP, ESP
+
+	mov		ESI, [EBP + 8]		; input array
+	mov		EDI, [EBP + 12]		; outString
+	mov		ECX, MAX_USER_INPUT_SIZE - 1
+
+	_printNumber:
+		push	EDI
+		push	[ESI]
+		call	WriteVal
+		add		ESI, 4
+		loop	_printNumber
+
+
+	pop		EBP
+	RET
+DisplayNumbers ENDP
 
 END main
