@@ -1,4 +1,4 @@
-Microsoft (R) Macro Assembler Version 14.28.29914.0	    06/06/21 17:31:25
+Microsoft (R) Macro Assembler Version 14.28.29914.0	    06/06/21 17:44:58
 #Program Template     (template.asm			     Page 1 - 1
 
 
@@ -67,6 +67,7 @@ Microsoft (R) Macro Assembler Version 14.28.29914.0	    06/06/21 17:31:25
  = 0000002D			NEG_ASCII			= 45
  = 00000020			SPACE_ASCII			= 32
  = 0000000B			MAX_USER_INPUT_SIZE = 11
+ = 0000000A			MAX_NUM_LENGTH		= 10
  = 00000000			NULL_BIT			= 0
 
 
@@ -274,8 +275,26 @@ Microsoft (R) Macro Assembler Version 14.28.29914.0	    06/06/21 17:31:25
  00000105  E8 00000000 E   *	    call   ExitProcess
  0000010A			main ENDP
 
-				; (insert additional procedures here)
-
+				;--------------------------------------------------------------------------
+				; name: ReadVal
+				;
+				; Reads integer input as string converting storing each number input into
+				; an SDWORD array
+				;
+				; Precondition: none
+				;
+				; Postconditions: userNums SDWORD array will be filled with 10 SDWORD integers
+				;				  setNegative & userInputLen will be changed
+				;
+				; Receives: [EBP + 8]	 = userInputLen (holds the length of user input)
+				;			[EBP + 12]	 = userInput
+				;			[EBP + 16]	 = prompt (Message)
+				;			[EBP + 20]	 = errorMsg
+				;			[EBP + 24]	 = setNegative (Acts as flag when a negative int entered)
+				;			[EBP + 28]	 = userNums (Array to saved converted string nums to SDWORD)
+				;
+				; Returns: none
+				;--------------------------------------------------------------------------
  0000010A			ReadVal PROC
  0000010A  55				push	EBP
  0000010B  8B EC			mov		EBP, ESP
@@ -286,7 +305,7 @@ Microsoft (R) Macro Assembler Version 14.28.29914.0	    06/06/21 17:31:25
  00000110  57				push	EDI
  00000111  56				push	ESI
 
- 00000112  B9 0000000A			mov		ECX, MAX_USER_INPUT_SIZE - 1	; sub 1 for sign when using as counter
+ 00000112  B9 0000000A			mov		ECX, MAX_NUM_LENGTH
  00000117  8B 7D 1C			mov		EDI, [EBP + 28]	
 
  0000011A				_prompt:
@@ -327,7 +346,7 @@ Microsoft (R) Macro Assembler Version 14.28.29914.0	    06/06/21 17:31:25
  00000158				_setNegativeFlag:
  00000158  53					push	EBX
  00000159  BB 00000001				mov		EBX, 1
- 0000015E  89 5D 18				mov		[EBP + 24], EBX
+ 0000015E  89 5D 18				mov		[EBP + 24], EBX			; modify setNegative to 1
  00000161  5B					pop		EBX
  00000162  49					dec		ECX
  00000163  EB 01				jmp		_moveForward
@@ -380,7 +399,7 @@ Microsoft (R) Macro Assembler Version 14.28.29914.0	    06/06/21 17:31:25
  000001A6  77 BE				ja		_moveForward
 
  000001A8  50					push	EAX
- 000001A9  8B 45 18				mov		EAX, [EBP + 24]
+ 000001A9  8B 45 18				mov		EAX, [EBP + 24]		; check is setNegative is 1, move to _negate
  000001AC  83 F8 01				cmp		EAX, 1
  000001AF  74 02				je		_negate
  000001B1  EB 06				jmp		_continue
@@ -506,7 +525,7 @@ Microsoft (R) Macro Assembler Version 14.28.29914.0	    06/06/21 17:31:25
 
  00000245  8B 75 08			mov		ESI, [EBP + 8]					; input array
  00000248  8B 7D 0C			mov		EDI, [EBP + 12]					; outString
- 0000024B  B9 0000000A			mov		ECX, MAX_USER_INPUT_SIZE - 1
+ 0000024B  B9 0000000A			mov		ECX, MAX_NUM_LENGTH
 
  00000250				_printNumber:
  00000250  57					push	EDI
@@ -535,7 +554,7 @@ Microsoft (R) Macro Assembler Version 14.28.29914.0	    06/06/21 17:31:25
 
  0000026B  8B 75 08			mov		ESI, [EBP + 8]		; input array
  0000026E  8B 7D 0C			mov		EDI, [EBP + 12]		; outString
- 00000271  B9 0000000A			mov		ECX, MAX_USER_INPUT_SIZE - 1
+ 00000271  B9 0000000A			mov		ECX, MAX_NUM_LENGTH
 
  00000276  B8 00000000			mov		EAX, 0
 
@@ -565,11 +584,11 @@ Microsoft (R) Macro Assembler Version 14.28.29914.0	    06/06/21 17:31:25
 
 
 
- 00000295  B9 0000000A			mov		ECX, MAX_USER_INPUT_SIZE - 1
+ 00000295  B9 0000000A			mov		ECX, MAX_NUM_LENGTH
  0000029A  8B 45 08			mov		EAX, [EBP + 8]					; sum
 					
  0000029D				_divide:
- 0000029D  BB 0000000A				mov		EBX, MAX_USER_INPUT_SIZE - 1
+ 0000029D  BB 0000000A				mov		EBX, MAX_NUM_LENGTH
  000002A2  BA 00000000				mov		EDX, 0
  000002A7  99					cdq
  000002A8  F7 FB				idiv	EBX
@@ -586,7 +605,7 @@ Microsoft (R) Macro Assembler Version 14.28.29914.0	    06/06/21 17:31:25
  000002B6			CalculateAverage ENDP
 
 				END main
-Microsoft (R) Macro Assembler Version 14.28.29914.0	    06/06/21 17:31:25
+Microsoft (R) Macro Assembler Version 14.28.29914.0	    06/06/21 17:44:58
 #Program Template     (template.asm			     Symbols 2 - 1
 
 
@@ -916,6 +935,7 @@ LEFT_ALT_PRESSED . . . . . . . .	Number	 00000002h
 LEFT_CTRL_PRESSED  . . . . . . .	Number	 00000008h   
 LO_NUM_ASCII . . . . . . . . . .	Number	 00000030h   
 LO . . . . . . . . . . . . . . .	Number	 -80000000h   
+MAX_NUM_LENGTH . . . . . . . . .	Number	 0000000Ah   
 MAX_USER_INPUT_SIZE  . . . . . .	Number	 0000000Bh   
 MB_ABORTRETRYIGNORE  . . . . . .	Number	 00000002h   
 MB_APPLMODAL . . . . . . . . . .	Number	 00000000h   

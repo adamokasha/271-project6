@@ -46,6 +46,7 @@ POS_ASCII			= 43
 NEG_ASCII			= 45
 SPACE_ASCII			= 32
 MAX_USER_INPUT_SIZE = 11
+MAX_NUM_LENGTH		= 10
 NULL_BIT			= 0
 
 
@@ -133,8 +134,26 @@ main PROC
 	Invoke ExitProcess,0	; exit to operating system
 main ENDP
 
-; (insert additional procedures here)
-
+;--------------------------------------------------------------------------
+; name: ReadVal
+;
+; Reads integer input as string converting storing each number input into
+; an SDWORD array
+;
+; Precondition: none
+;
+; Postconditions: userNums SDWORD array will be filled with 10 SDWORD integers
+;				  setNegative & userInputLen will be changed
+;
+; Receives: [EBP + 8]	 = userInputLen (holds the length of user input)
+;			[EBP + 12]	 = userInput
+;			[EBP + 16]	 = prompt (Message)
+;			[EBP + 20]	 = errorMsg
+;			[EBP + 24]	 = setNegative (Acts as flag when a negative int entered)
+;			[EBP + 28]	 = userNums (Array to saved converted string nums to SDWORD)
+;
+; Returns: none
+;--------------------------------------------------------------------------
 ReadVal PROC
 	push	EBP
 	mov		EBP, ESP
@@ -145,7 +164,7 @@ ReadVal PROC
 	push	EDI
 	push	ESI
 
-	mov		ECX, MAX_USER_INPUT_SIZE - 1	; sub 1 for sign when using as counter
+	mov		ECX, MAX_NUM_LENGTH
 	mov		EDI, [EBP + 28]	
 
 	_prompt:
@@ -174,7 +193,7 @@ ReadVal PROC
 	_setNegativeFlag:
 		push	EBX
 		mov		EBX, 1
-		mov		[EBP + 24], EBX
+		mov		[EBP + 24], EBX			; modify setNegative to 1
 		pop		EBX
 		dec		ECX
 		jmp		_moveForward
@@ -223,7 +242,7 @@ ReadVal PROC
 		ja		_moveForward
 
 		push	EAX
-		mov		EAX, [EBP + 24]
+		mov		EAX, [EBP + 24]		; check is setNegative is 1, move to _negate
 		cmp		EAX, 1
 		je		_negate
 		jmp		_continue
@@ -337,7 +356,7 @@ DisplayNumbers PROC
 
 	mov		ESI, [EBP + 8]					; input array
 	mov		EDI, [EBP + 12]					; outString
-	mov		ECX, MAX_USER_INPUT_SIZE - 1
+	mov		ECX, MAX_NUM_LENGTH
 
 	_printNumber:
 		push	EDI
@@ -366,7 +385,7 @@ CalculateSum PROC
 
 	mov		ESI, [EBP + 8]		; input array
 	mov		EDI, [EBP + 12]		; outString
-	mov		ECX, MAX_USER_INPUT_SIZE - 1
+	mov		ECX, MAX_NUM_LENGTH
 
 	mov		EAX, 0
 
@@ -396,11 +415,11 @@ CalculateAverage PROC
 
 
 
-	mov		ECX, MAX_USER_INPUT_SIZE - 1
+	mov		ECX, MAX_NUM_LENGTH
 	mov		EAX, [EBP + 8]					; sum
 	
 	_divide:
-		mov		EBX, MAX_USER_INPUT_SIZE - 1
+		mov		EBX, MAX_NUM_LENGTH
 		mov		EDX, 0
 		cdq
 		idiv	EBX
