@@ -1,12 +1,14 @@
 TITLE Program Template     (template.asm)
 
-; Author: 
-; Last Modified:
-; OSU email address: ONID_ID@oregonstate.edu
-; Course number/section:   CS271 Section ???
-; Project Number:                 Due Date:
-; Description: This file is provided as a template from which you may work
-;              when developing assembly projects in CS271.
+; Author: Adam Okasha
+; Last Modified: 6 Jun 2021
+; OSU email address: okashaa@oregonstate.edu
+; Course number/section:   CS271 Section 400
+; Project Number:  6               Due Date: 6 Jun 2021
+; Description: This program reads in 10 integers that fit in a 32 bit register,
+;			   converts them to SDWORD integers and saves them in an array, 
+;			   converts them back to strings and displays them and their sums 
+;			   and averages as string. 
 
 INCLUDE Irvine32.inc
 
