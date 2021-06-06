@@ -1,4 +1,4 @@
-Microsoft (R) Macro Assembler Version 14.28.29914.0	    06/06/21 18:06:12
+Microsoft (R) Macro Assembler Version 14.28.29914.0	    06/06/21 18:12:27
 #Program Template     (template.asm			     Page 1 - 1
 
 
@@ -442,8 +442,8 @@ Microsoft (R) Macro Assembler Version 14.28.29914.0	    06/06/21 18:06:12
 				;
 				; Postconditions: outSring will be modified 
 				;
-				; Receives: [EBP + 8]	 = SDWORD integer
-				;			[EBP + 12]	 = outString (1 byte, prints and moves back to start address to reuse)
+				; Receives: [EBP + 8]	 = userNums (SSWORD array)
+				;			[EBP + 12]	 = outString address (1 byte, prints and moves back to start address to reuse)
 				;
 				; Returns: none
 				;--------------------------------------------------------------------------
@@ -534,6 +534,20 @@ Microsoft (R) Macro Assembler Version 14.28.29914.0	    06/06/21 18:06:12
  0000023C  C2 0008			RET	8
  0000023F			WriteVal ENDP
 
+				;--------------------------------------------------------------------------
+				; name: DisplayNumbers
+				;
+				; Loops over SDWORD numbers array and call WriteVal to display the numbers
+				;
+				; Precondition: SDWORD array must be filled
+				;
+				; Postconditions: none 
+				;
+				; Receives: [EBP + 8]	 = SDWORD integer
+				;			[EBP + 12]	 = outString address (1 byte, prints and moves back to start address to reuse)
+				;
+				; Returns: none
+				;--------------------------------------------------------------------------
  0000023F			DisplayNumbers PROC
  0000023F  55				push	EBP
  00000240  8B EC			mov		EBP, ESP
@@ -624,7 +638,7 @@ Microsoft (R) Macro Assembler Version 14.28.29914.0	    06/06/21 18:06:12
  000002B6			CalculateAverage ENDP
 
 				END main
-Microsoft (R) Macro Assembler Version 14.28.29914.0	    06/06/21 18:06:12
+Microsoft (R) Macro Assembler Version 14.28.29914.0	    06/06/21 18:12:27
 #Program Template     (template.asm			     Symbols 2 - 1
 
 

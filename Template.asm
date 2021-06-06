@@ -285,8 +285,8 @@ ReadVal ENDP
 ;
 ; Postconditions: outSring will be modified 
 ;
-; Receives: [EBP + 8]	 = SDWORD integer
-;			[EBP + 12]	 = outString (1 byte, prints and moves back to start address to reuse)
+; Receives: [EBP + 8]	 = userNums (SSWORD array)
+;			[EBP + 12]	 = outString address (1 byte, prints and moves back to start address to reuse)
 ;
 ; Returns: none
 ;--------------------------------------------------------------------------
@@ -365,6 +365,20 @@ WriteVal PROC
 	RET	8
 WriteVal ENDP
 
+;--------------------------------------------------------------------------
+; name: DisplayNumbers
+;
+; Loops over SDWORD numbers array and call WriteVal to display the numbers
+;
+; Precondition: SDWORD array must be filled
+;
+; Postconditions: none 
+;
+; Receives: [EBP + 8]	   = SDWORD integer
+;			[EBP + 12]	   = outString address (1 byte, prints and moves back to start address to reuse)
+;			MAX_NUM_LENGTH = the length of SDWORD array
+; Returns: none
+;--------------------------------------------------------------------------
 DisplayNumbers PROC
 	push	EBP
 	mov		EBP, ESP
