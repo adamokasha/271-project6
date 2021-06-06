@@ -10,7 +10,6 @@ TITLE Program Template     (template.asm)
 
 INCLUDE Irvine32.inc
 
-; (insert macro definitions here)
 mGetString MACRO buffer, usrInput, usrInputCount, usrInputLen
 	push	EDX
 	push	ECX
@@ -37,17 +36,15 @@ mDisplayString MACRO display_string
 	pop		EDX
 ENDM
 
-; (insert constant definitions here)
-
-LO			 = -2147483648
-HI			 = 2147483647
-LO_NUM_ASCII = 48
-HI_NUM_ASCII = 57
-POS_ASCII	 = 43
-NEG_ASCII	 = 45
-SPACE_ASCII	 = 32
+LO					= -2147483648
+HI					= 2147483647
+LO_NUM_ASCII		= 48
+HI_NUM_ASCII		= 57
+POS_ASCII			= 43
+NEG_ASCII			= 45
+SPACE_ASCII			= 32
 MAX_USER_INPUT_SIZE = 11
-NULL_BIT	=	0
+NULL_BIT			= 0
 
 
 .data
@@ -67,10 +64,10 @@ userNum				SDWORD		?
 userNums			SDWORD		10 DUP(?)
 errorMsg			BYTE		"The number you entered is invalid. Try again.",0
 setNegative			DWORD		0
-testInt				SDWORD		-103
-testArr				SDWORD		-103, -109, 110, -2000, 2000, -1, 0, 89, 101, 99
 outString			BYTE		1 DUP(?)
-
+avgString			BYTE		1 DUP(?)
+sum					SDWORD		0
+average				SDWORD		0
 
 .code
 main PROC
@@ -93,9 +90,6 @@ main PROC
 
 	call	Crlf
 
-	;push	OFFSET outString
-	;push	testInt
-	;call	WriteVal
 	mDisplayString OFFSET numbersEnteredMsg
 	call	Crlf
 
@@ -106,16 +100,30 @@ main PROC
 	call	Crlf
 	call	Crlf
 
-	;push	OFFSET outString
-	;push	OFFSET testArr
-	;call	DisplayAverage
-
-	push	OFFSET avgDisplayMsg
-	push	OFFSET sumDisplayMsg
+	push	OFFSET sum
 	push	OFFSET outString
 	push	OFFSET userNums
-	call	DisplayCalculations
+	call	CalculateSum
 
+	mDisplayString  OFFSET sumDisplayMsg
+
+	push	OFFSET	outString
+	push	sum
+	call	WriteVal
+
+	call	Crlf
+
+	push	OFFSET average
+	push	sum
+	call	CalculateAverage
+
+	mDisplayString  OFFSET avgDisplayMsg
+
+	push	OFFSET	outString
+	push	average
+	call	WriteVal
+
+	call	Crlf
 	call	Crlf
 
 	mDisplayString OFFSET goodByeMsg
@@ -129,6 +137,12 @@ ReadVal PROC
 	push	EBP
 	mov		EBP, ESP
 
+	push	EAX
+	push	EBX
+	push	ECX
+	push	EDI
+	push	ESI
+
 	mov		ECX, MAX_USER_INPUT_SIZE - 1	; sub 1 for sign when using as counter
 	mov		EDI, [EBP + 28]	
 
@@ -140,7 +154,6 @@ ReadVal PROC
 		mov		EAX, [EBP + 8]			; set ECX as the count of userInput
 		mov		ECX, [EAX]
 		pop		EAX
-		;mov		ECX, EAX
 
 		mov		ESI, [EBP + 12]			; reset userInput mem location
 		
@@ -195,16 +208,13 @@ ReadVal PROC
 		push	EBX
 		mov		EAX, EBX			; 10 * (EAX <= EBX)
 		mov		EBX, 10
-		mul		EBX					; 0/ 1/ 10 in EAX
+		mul		EBX					
 		mov		[EDI], EAX
 		pop		EBX
 		pop		EAX
 
 		sub		AL, LO_NUM_ASCII
 		add		[EDI], AL
-
-		;add		EAX, EBX
-		;mov		[EDI], EAX
 
 		dec		ECX
 		cmp		ECX, 0
@@ -231,6 +241,11 @@ ReadVal PROC
 			cmp		ECX, 0
 			jnz		_prompt
 	
+	pop		ESI
+	pop		EDI
+	pop		ECX
+	pop		EBX
+	pop		EAX
 	pop		EBX
 	RET		28
 ReadVal ENDP
@@ -240,10 +255,14 @@ WriteVal PROC
 	mov		EBP, ESP
 
 	push	EAX
-	;mov		ESI, [EBP + 8]			; int address
-	mov		EDI, [EBP + 12]			; outString address
-	mov		EAX, [EBP + 8]
+	push	EBX
 	push	ECX
+	push	EDI
+	push	EDX
+
+
+	mov		EDI, [EBP + 12]			; outString address
+	mov		EAX, [EBP + 8]			; number to write to outString
 
 	_checkSign:
 		cmp		EAX, 0
@@ -262,10 +281,6 @@ WriteVal PROC
 		
 		pop		EAX
 		neg		EAX			; convert to positive int
-
-		;mov		AL, 48
-		;stosb
-		;mDisplayString		[EBP + 12]
 
 	_pushNullBit:
 		push	0
@@ -286,7 +301,6 @@ WriteVal PROC
 	_popAndPrint:
 		pop		EAX
 
-		;mov		AL, EAX
 		stosb
 		mDisplayString		[EBP + 12]
 		dec		EDI
@@ -300,9 +314,11 @@ WriteVal PROC
 		stosb
 		mDisplayString		[EBP + 12]
 		dec		EDI
-		
-
+	
+	pop		EDX
+	pop		EDI
 	pop		ECX
+	pop		EBX
 	pop		EAX
 	pop		EBP
 
@@ -313,8 +329,12 @@ DisplayNumbers PROC
 	push	EBP
 	mov		EBP, ESP
 
-	mov		ESI, [EBP + 8]		; input array
-	mov		EDI, [EBP + 12]		; outString
+	push	ESI
+	push	EDI
+	push	ECX
+
+	mov		ESI, [EBP + 8]					; input array
+	mov		EDI, [EBP + 12]					; outString
 	mov		ECX, MAX_USER_INPUT_SIZE - 1
 
 	_printNumber:
@@ -324,14 +344,23 @@ DisplayNumbers PROC
 		add		ESI, 4
 		loop	_printNumber
 
-
-	pop		EBP
-	RET		8
+	pop		ECX
+	pop		EDI
+	pop		ESI
+	pop		EBP	
+	RET		12
 DisplayNumbers ENDP
 
-DisplayCalculations PROC
+CalculateSum PROC
 	push	EBP
 	mov		EBP, ESP
+
+	push	ESI
+	push	EAX
+	push	EBX
+	push	ECX
+
+
 
 	mov		ESI, [EBP + 8]		; input array
 	mov		EDI, [EBP + 12]		; outString
@@ -344,34 +373,45 @@ DisplayCalculations PROC
 		add		ESI, 4
 		loop	_sumNumbers
 
-	;push	EAX
+	mov		EBX, [ebp + 16]
+	mov		[EBX], EAX
 
-	mDisplayString [EBP + 16]
+	pop	ECX
+	pop	EBX
+	pop	EAX
+	pop	ESI
+	pop	EBP
+	
+	RET		16
+CalculateSum ENDP
 
-	push	EDI
+CalculateAverage PROC
+	push	EBP
+	mov		EBP, ESP
+	push	ECX
 	push	EAX
-	call	WriteVal
+	push	EBX
 
-	call	Crlf
 
-	;pop		EAX
 
+	mov		ECX, MAX_USER_INPUT_SIZE - 1
+	mov		EAX, [EBP + 8]					; sum
+	
 	_divide:
 		mov		EBX, MAX_USER_INPUT_SIZE - 1
 		mov		EDX, 0
 		cdq
 		idiv	EBX
 
-	mDisplayString [EBP + 20]
+	mov		EBX, [ebp + 12]
+	mov		[EBX], EAX
 
-	push	EDI
-	push	EAX
-	call	WriteVal
-
-	call	Crlf
-
+	pop		EBX
+	pop		EAX
+	pop		ECX
 	pop		EBP
-	RET		8
-DisplayCalculations ENDP
+
+	RET		12
+CalculateAverage ENDP
 
 END main
