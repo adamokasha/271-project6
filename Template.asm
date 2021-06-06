@@ -124,6 +124,7 @@ main PROC
 	call	WriteVal
 
 	call	Crlf
+	call	Crlf
 
 	mDisplayString OFFSET goodByeMsg
 
