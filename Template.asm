@@ -56,6 +56,8 @@ intro1			BYTE		"PROJECT 6: String Primitives and Macros by Adam Okasha",13,10,0
 intro2			BYTE		"Please input 10 signed decimal integers that can fit inside a 32 bit register.",13,10,
 							"The program will then display the integers, their sum, and the average.",13,10,0
 prompt			BYTE		"Please enter a signed integer: ",0
+sumDisplayMsg	BYTE		"The sum is:     ",0
+avgDisplayMsg	BYTE		"The average is: ",0
 userInput		BYTE		MAX_USER_INPUT_SIZE DUP(?)
 userInputLen	DWORD		?
 userNum			SDWORD		?
@@ -85,7 +87,6 @@ main PROC
 	push	OFFSET userInput
 	push	OFFSET userInputLen
 	call	ReadVal
-	mDisplayString	OFFSET userInput
 
 	call	Crlf
 
@@ -103,6 +104,8 @@ main PROC
 	;push	OFFSET testArr
 	;call	DisplayAverage
 
+	push	OFFSET avgDisplayMsg
+	push	OFFSET sumDisplayMsg
 	push	OFFSET outString
 	push	OFFSET userNums
 	call	DisplayAverage
@@ -215,7 +218,7 @@ ReadVal PROC
 			jnz		_prompt
 	
 	pop		EBX
-	RET		24
+	RET		28
 ReadVal ENDP
 
 WriteVal PROC
@@ -329,9 +332,13 @@ DisplayAverage PROC
 
 	;push	EAX
 
+	mDisplayString [EBP + 16]
+
 	push	EDI
 	push	EAX
 	call	WriteVal
+
+	call	Crlf
 
 	;pop		EAX
 
@@ -341,9 +348,13 @@ DisplayAverage PROC
 		cdq
 		idiv	EBX
 
+	mDisplayString [EBP + 20]
+
 	push	EDI
 	push	EAX
 	call	WriteVal
+
+	call	Crlf
 
 	pop		EBP
 	RET		8
