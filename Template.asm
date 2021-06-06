@@ -63,13 +63,13 @@ userNums		SDWORD		10 DUP(?)
 errorMsg		BYTE		"The number you entered is invalid. Try again.",0
 setNegative		DWORD		0
 testInt			SDWORD		-103
-testArr			SDWORD		-103, -109, 110, -2147483648, 2147483647, -1, 0, 89, 101, 99
+testArr			SDWORD		-103, -109, 110, -2000, 2000, -1, 0, 89, 101, 99
 outString		BYTE		1 DUP(?)
 
 
 .code
 main PROC
-
+	
 	;push	OFFSET userNums
 	;push	OFFSET setNegative
 	;push	OFFSET errorMsg
@@ -79,13 +79,21 @@ main PROC
 	;call	ReadVal
 	;mDisplayString	OFFSET userInput
 
+	call	Crlf
+
 	;push	OFFSET outString
 	;push	testInt
 	;call	WriteVal
 
+	;push	OFFSET outString
+	;push	OFFSET userNums
+	;call	DisplayNumbers
+
 	push	OFFSET outString
 	push	OFFSET testArr
-	call	DisplayNumbers
+	call	DisplayAverage
+
+	call	Crlf
 
 	Invoke ExitProcess,0	; exit to operating system
 main ENDP
@@ -286,5 +294,28 @@ DisplayNumbers PROC
 	pop		EBP
 	RET
 DisplayNumbers ENDP
+
+DisplayAverage PROC
+	push	EBP
+	mov		EBP, ESP
+
+	mov		ESI, [EBP + 8]		; input array
+	mov		EDI, [EBP + 12]		; outString
+	mov		ECX, MAX_USER_INPUT_SIZE - 1
+
+	mov		EAX, 0
+
+	_sumNumbers:
+		add		EAX, [ESI]
+		add		ESI, 4
+		loop	_sumNumbers
+
+	push	EDI
+	push	EAX
+	call	WriteVal	
+
+	pop		EBP
+	RET
+DisplayAverage ENDP
 
 END main
