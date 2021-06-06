@@ -52,21 +52,23 @@ NULL_BIT	=	0
 
 .data
 
-intro1			BYTE		"PROJECT 6: String Primitives and Macros by Adam Okasha",13,10,0
-intro2			BYTE		"Please input 10 signed decimal integers that can fit inside a 32 bit register.",13,10,
-							"The program will then display the integers, their sum, and the average.",13,10,0
-prompt			BYTE		"Please enter a signed integer: ",0
-sumDisplayMsg	BYTE		"The sum is:     ",0
-avgDisplayMsg	BYTE		"The average is: ",0
-userInput		BYTE		MAX_USER_INPUT_SIZE DUP(?)
-userInputLen	DWORD		?
-userNum			SDWORD		?
-userNums		SDWORD		10 DUP(?)
-errorMsg		BYTE		"The number you entered is invalid. Try again.",0
-setNegative		DWORD		0
-testInt			SDWORD		-103
-testArr			SDWORD		-103, -109, 110, -2000, 2000, -1, 0, 89, 101, 99
-outString		BYTE		1 DUP(?)
+intro1				BYTE		"PROJECT 6: String Primitives and Macros by Adam Okasha",13,10,0
+intro2				BYTE		"Please input 10 signed decimal integers that can fit inside a 32 bit register.",13,10,
+								"The program will then display the integers, their sum, and the average.",13,10,0
+prompt				BYTE		"Please enter a signed integer: ",0
+numbersEnteredMsg	BYTE		"The numbers you entered are:",0
+sumDisplayMsg		BYTE		"The sum is:     ",0
+avgDisplayMsg		BYTE		"The average is: ",0
+goodByeMsg			BYTE		"Goodbye!",0
+userInput			BYTE		MAX_USER_INPUT_SIZE DUP(?)
+userInputLen		DWORD		?
+userNum				SDWORD		?
+userNums			SDWORD		10 DUP(?)
+errorMsg			BYTE		"The number you entered is invalid. Try again.",0
+setNegative			DWORD		0
+testInt				SDWORD		-103
+testArr				SDWORD		-103, -109, 110, -2000, 2000, -1, 0, 89, 101, 99
+outString			BYTE		1 DUP(?)
 
 
 .code
@@ -93,11 +95,14 @@ main PROC
 	;push	OFFSET outString
 	;push	testInt
 	;call	WriteVal
+	mDisplayString OFFSET numbersEnteredMsg
+	call	Crlf
 
 	push	OFFSET outString
 	push	OFFSET userNums
 	call	DisplayNumbers
 
+	call	Crlf
 	call	Crlf
 
 	;push	OFFSET outString
@@ -111,6 +116,8 @@ main PROC
 	call	DisplayAverage
 
 	call	Crlf
+
+	mDisplayString OFFSET goodByeMsg
 
 	Invoke ExitProcess,0	; exit to operating system
 main ENDP
