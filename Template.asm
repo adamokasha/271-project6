@@ -53,8 +53,9 @@ NULL_BIT	=	0
 .data
 
 intro1				BYTE		"PROJECT 6: String Primitives and Macros by Adam Okasha",13,10,0
-intro2				BYTE		"Please input 10 signed decimal integers that can fit inside a 32 bit register.",13,10,
-								"The program will then display the integers, their sum, and the average.",13,10,0
+intro2				BYTE		"Please input 10 signed decimal integers that can fit inside a 32 bit register.",13,10,0
+intro3				BYTE		"The maximum length of any entry should be 11 with sign or 10 without.",13,10,0
+intro4				BYTE		"The program will then display the integers, their sum, and the average.",13,10,0
 prompt				BYTE		"Please enter a signed integer: ",0
 numbersEnteredMsg	BYTE		"The numbers you entered are:",0
 sumDisplayMsg		BYTE		"The sum is:     ",0
@@ -75,11 +76,11 @@ outString			BYTE		1 DUP(?)
 main PROC
 
 	mDisplayString	OFFSET intro1
-
 	call	Crlf
 
 	mDisplayString  OFFSET intro2
-
+	mDisplayString  OFFSET intro3
+	mDisplayString  OFFSET intro4
 	call	Crlf
 	
 	push	OFFSET userNums
@@ -151,6 +152,8 @@ ReadVal PROC
 		lodsb
 		cmp		AL, 45
 		je		_setNegativeFlag
+		cmp		AL, 43
+		je		_withPositiveSign
 		jmp		_validate
 
 	_setNegativeFlag:
@@ -158,6 +161,10 @@ ReadVal PROC
 		mov		EBX, 1
 		mov		[EBP + 24], EBX
 		pop		EBX
+		dec		ECX
+		jmp		_moveForward
+
+	_withPositiveSign:
 		dec		ECX
 
 
