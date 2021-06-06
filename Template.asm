@@ -104,7 +104,6 @@ main PROC
 	call	Crlf
 
 	push	OFFSET sum
-	push	OFFSET outString
 	push	OFFSET userNums
 	call	CalculateSum
 
@@ -417,7 +416,6 @@ CalculateSum PROC
 
 
 	mov		ESI, [EBP + 8]		; input array
-	mov		EDI, [EBP + 12]		; outString
 	mov		ECX, MAX_NUM_LENGTH
 
 	mov		EAX, 0
@@ -427,7 +425,7 @@ CalculateSum PROC
 		add		ESI, 4
 		loop	_sumNumbers
 
-	mov		EBX, [ebp + 16]
+	mov		EBX, [ebp + 12]
 	mov		[EBX], EAX
 
 	pop	ECX
@@ -436,7 +434,7 @@ CalculateSum PROC
 	pop	ESI
 	pop	EBP
 	
-	RET		16
+	RET		8
 CalculateSum ENDP
 
 CalculateAverage PROC
