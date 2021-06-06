@@ -150,6 +150,12 @@ ReadVal PROC
 	push	EBP
 	mov		EBP, ESP
 
+	push	EAX
+	push	EBX
+	push	ECX
+	push	EDI
+	push	ESI
+
 	mov		ECX, MAX_USER_INPUT_SIZE - 1	; sub 1 for sign when using as counter
 	mov		EDI, [EBP + 28]	
 
@@ -252,6 +258,11 @@ ReadVal PROC
 			cmp		ECX, 0
 			jnz		_prompt
 	
+	pop		ESI
+	pop		EDI
+	pop		ECX
+	pop		EBX
+	pop		EAX
 	pop		EBX
 	RET		28
 ReadVal ENDP
