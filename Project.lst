@@ -1,4 +1,4 @@
-Microsoft (R) Macro Assembler Version 14.28.29914.0	    06/06/21 17:05:04
+Microsoft (R) Macro Assembler Version 14.28.29914.0	    06/06/21 17:11:28
 #Program Template     (template.asm			     Page 1 - 1
 
 
@@ -31,7 +31,6 @@ Microsoft (R) Macro Assembler Version 14.28.29914.0	    06/06/21 17:05:04
 			      C .LIST
 			      C 
 
-				; (insert macro definitions here)
 				mGetString MACRO buffer, usrInput, usrInputCount, usrInputLen
 					push	EDX
 					push	ECX
@@ -57,8 +56,6 @@ Microsoft (R) Macro Assembler Version 14.28.29914.0	    06/06/21 17:05:04
 
 					pop		EDX
 				ENDM
-
-				; (insert constant definitions here)
 
  =-80000000			LO			 = -2147483648
  = 7FFFFFFF			HI			 = 2147483647
@@ -227,9 +224,6 @@ Microsoft (R) Macro Assembler Version 14.28.29914.0	    06/06/21 17:05:04
 
  0000005D  E8 00000000 E		call	Crlf
 
-					;push	OFFSET outString
-					;push	testInt
-					;call	WriteVal
 					mDisplayString OFFSET numbersEnteredMsg
  00000062  52		     1		push	EDX
  00000063  BA 0000013C R     1		mov		EDX, OFFSET numbersEnteredMsg
@@ -274,12 +268,6 @@ Microsoft (R) Macro Assembler Version 14.28.29914.0	    06/06/21 17:05:04
  000000DD  68 0000021D R		push	OFFSET	outString
  000000E2  FF 35 00000223 R		push	average
  000000E8  E8 000000DF			call	WriteVal
-
-					;push	OFFSET avgDisplayMsg
-					;push	OFFSET sumDisplayMsg
-					;push	OFFSET outString
-					;push	OFFSET userNums
-					;call	DisplayCalculations
 
  000000ED  E8 00000000 E		call	Crlf
 
@@ -329,7 +317,6 @@ Microsoft (R) Macro Assembler Version 14.28.29914.0	    06/06/21 17:05:04
  00000137  8B 45 08				mov		EAX, [EBP + 8]			; set ECX as the count of userInput
  0000013A  8B 08				mov		ECX, [EAX]
  0000013C  58					pop		EAX
-						;mov		ECX, EAX
 
  0000013D  8B 75 0C				mov		ESI, [EBP + 12]			; reset userInput mem location
 						
@@ -388,16 +375,13 @@ Microsoft (R) Macro Assembler Version 14.28.29914.0	    06/06/21 17:05:04
  0000018B  53					push	EBX
  0000018C  8B C3				mov		EAX, EBX			; 10 * (EAX <= EBX)
  0000018E  BB 0000000A				mov		EBX, 10
- 00000193  F7 E3				mul		EBX					; 0/ 1/ 10 in EAX
+ 00000193  F7 E3				mul		EBX					
  00000195  89 07				mov		[EDI], EAX
  00000197  5B					pop		EBX
  00000198  58					pop		EAX
 
  00000199  2C 30				sub		AL, LO_NUM_ASCII
  0000019B  00 07				add		[EDI], AL
-
-						;add		EAX, EBX
-						;mov		[EDI], EAX
 
  0000019D  49					dec		ECX
  0000019E  83 F9 00				cmp		ECX, 0
@@ -488,7 +472,6 @@ Microsoft (R) Macro Assembler Version 14.28.29914.0	    06/06/21 17:05:04
  0000020F				_popAndPrint:
  0000020F  58					pop		EAX
 
-						;mov		AL, EAX
  00000210  AA					stosb
 						mDisplayString		[EBP + 12]
  00000211  52		     1		push	EDX
@@ -529,8 +512,8 @@ Microsoft (R) Macro Assembler Version 14.28.29914.0	    06/06/21 17:05:04
  0000023E  57				push	EDI
  0000023F  51				push	ECX
 
- 00000240  8B 75 08			mov		ESI, [EBP + 8]		; input array
- 00000243  8B 7D 0C			mov		EDI, [EBP + 12]		; outString
+ 00000240  8B 75 08			mov		ESI, [EBP + 8]					; input array
+ 00000243  8B 7D 0C			mov		EDI, [EBP + 12]					; outString
  00000246  B9 0000000A			mov		ECX, MAX_USER_INPUT_SIZE - 1
 
  0000024B				_printNumber:
@@ -560,7 +543,6 @@ Microsoft (R) Macro Assembler Version 14.28.29914.0	    06/06/21 17:05:04
 
  00000266  8B 75 08			mov		ESI, [EBP + 8]		; input array
  00000269  8B 7D 0C			mov		EDI, [EBP + 12]		; outString
-					;mov		EBX, [EBP + 16]
  0000026C  B9 0000000A			mov		ECX, MAX_USER_INPUT_SIZE - 1
 
  00000271  B8 00000000			mov		EAX, 0
@@ -592,7 +574,7 @@ Microsoft (R) Macro Assembler Version 14.28.29914.0	    06/06/21 17:05:04
 
 
  00000290  B9 0000000A			mov		ECX, MAX_USER_INPUT_SIZE - 1
- 00000295  8B 45 08			mov		EAX, [EBP + 8]		; sum
+ 00000295  8B 45 08			mov		EAX, [EBP + 8]					; sum
 					
  00000298				_divide:
  00000298  BB 0000000A				mov		EBX, MAX_USER_INPUT_SIZE - 1
@@ -611,54 +593,8 @@ Microsoft (R) Macro Assembler Version 14.28.29914.0	    06/06/21 17:05:04
  000002AE  C2 000C			RET		12
  000002B1			CalculateAverage ENDP
 
-
-				;DisplayCalculations PROC
-				;	push	EBP
-				;	mov		EBP, ESP
-				;
-				;	mov		ESI, [EBP + 8]		; input array
-				;	mov		EDI, [EBP + 12]		; outString
-				;	mov		ECX, MAX_USER_INPUT_SIZE - 1
-				;
-				;	mov		EAX, 0
-				;
-				;	_sumNumbers:
-				;		add		EAX, [ESI]
-				;		add		ESI, 4
-				;		loop	_sumNumbers
-				;
-				;	;push	EAX
-				;
-				;	mDisplayString [EBP + 16]
-				;
-				;	push	EDI
-				;	push	EAX
-				;	call	WriteVal
-				;
-				;	call	Crlf
-				;
-				;	;pop		EAX
-				;
-				;	_divide:
-				;		mov		EBX, MAX_USER_INPUT_SIZE - 1
-				;		mov		EDX, 0
-				;		cdq
-				;		idiv	EBX
-				;
-				;	mDisplayString [EBP + 20]
-				;
-				;	push	EDI
-				;	push	EAX
-				;	call	WriteVal
-				;
-				;	call	Crlf
-				;
-				;	pop		EBP
-				;	RET		8
-				;DisplayCalculations ENDP
-
 				END main
-Microsoft (R) Macro Assembler Version 14.28.29914.0	    06/06/21 17:05:04
+Microsoft (R) Macro Assembler Version 14.28.29914.0	    06/06/21 17:11:28
 #Program Template     (template.asm			     Symbols 2 - 1
 
 

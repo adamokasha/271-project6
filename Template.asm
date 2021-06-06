@@ -10,7 +10,6 @@ TITLE Program Template     (template.asm)
 
 INCLUDE Irvine32.inc
 
-; (insert macro definitions here)
 mGetString MACRO buffer, usrInput, usrInputCount, usrInputLen
 	push	EDX
 	push	ECX
@@ -36,8 +35,6 @@ mDisplayString MACRO display_string
 
 	pop		EDX
 ENDM
-
-; (insert constant definitions here)
 
 LO			 = -2147483648
 HI			 = 2147483647
@@ -95,9 +92,6 @@ main PROC
 
 	call	Crlf
 
-	;push	OFFSET outString
-	;push	testInt
-	;call	WriteVal
 	mDisplayString OFFSET numbersEnteredMsg
 	call	Crlf
 
@@ -131,12 +125,6 @@ main PROC
 	push	average
 	call	WriteVal
 
-	;push	OFFSET avgDisplayMsg
-	;push	OFFSET sumDisplayMsg
-	;push	OFFSET outString
-	;push	OFFSET userNums
-	;call	DisplayCalculations
-
 	call	Crlf
 
 	mDisplayString OFFSET goodByeMsg
@@ -167,7 +155,6 @@ ReadVal PROC
 		mov		EAX, [EBP + 8]			; set ECX as the count of userInput
 		mov		ECX, [EAX]
 		pop		EAX
-		;mov		ECX, EAX
 
 		mov		ESI, [EBP + 12]			; reset userInput mem location
 		
@@ -222,16 +209,13 @@ ReadVal PROC
 		push	EBX
 		mov		EAX, EBX			; 10 * (EAX <= EBX)
 		mov		EBX, 10
-		mul		EBX					; 0/ 1/ 10 in EAX
+		mul		EBX					
 		mov		[EDI], EAX
 		pop		EBX
 		pop		EAX
 
 		sub		AL, LO_NUM_ASCII
 		add		[EDI], AL
-
-		;add		EAX, EBX
-		;mov		[EDI], EAX
 
 		dec		ECX
 		cmp		ECX, 0
@@ -318,7 +302,6 @@ WriteVal PROC
 	_popAndPrint:
 		pop		EAX
 
-		;mov		AL, EAX
 		stosb
 		mDisplayString		[EBP + 12]
 		dec		EDI
@@ -351,8 +334,8 @@ DisplayNumbers PROC
 	push	EDI
 	push	ECX
 
-	mov		ESI, [EBP + 8]		; input array
-	mov		EDI, [EBP + 12]		; outString
+	mov		ESI, [EBP + 8]					; input array
+	mov		EDI, [EBP + 12]					; outString
 	mov		ECX, MAX_USER_INPUT_SIZE - 1
 
 	_printNumber:
@@ -382,7 +365,6 @@ CalculateSum PROC
 
 	mov		ESI, [EBP + 8]		; input array
 	mov		EDI, [EBP + 12]		; outString
-	;mov		EBX, [EBP + 16]
 	mov		ECX, MAX_USER_INPUT_SIZE - 1
 
 	mov		EAX, 0
@@ -414,7 +396,7 @@ CalculateAverage PROC
 
 
 	mov		ECX, MAX_USER_INPUT_SIZE - 1
-	mov		EAX, [EBP + 8]		; sum
+	mov		EAX, [EBP + 8]					; sum
 	
 	_divide:
 		mov		EBX, MAX_USER_INPUT_SIZE - 1
@@ -432,51 +414,5 @@ CalculateAverage PROC
 
 	RET		12
 CalculateAverage ENDP
-
-
-;DisplayCalculations PROC
-;	push	EBP
-;	mov		EBP, ESP
-;
-;	mov		ESI, [EBP + 8]		; input array
-;	mov		EDI, [EBP + 12]		; outString
-;	mov		ECX, MAX_USER_INPUT_SIZE - 1
-;
-;	mov		EAX, 0
-;
-;	_sumNumbers:
-;		add		EAX, [ESI]
-;		add		ESI, 4
-;		loop	_sumNumbers
-;
-;	;push	EAX
-;
-;	mDisplayString [EBP + 16]
-;
-;	push	EDI
-;	push	EAX
-;	call	WriteVal
-;
-;	call	Crlf
-;
-;	;pop		EAX
-;
-;	_divide:
-;		mov		EBX, MAX_USER_INPUT_SIZE - 1
-;		mov		EDX, 0
-;		cdq
-;		idiv	EBX
-;
-;	mDisplayString [EBP + 20]
-;
-;	push	EDI
-;	push	EAX
-;	call	WriteVal
-;
-;	call	Crlf
-;
-;	pop		EBP
-;	RET		8
-;DisplayCalculations ENDP
 
 END main
