@@ -53,8 +53,8 @@ NULL_BIT	=	0
 .data
 
 intro1			BYTE		"PROJECT 6: String Primitives and Macros by Adam Okasha",13,10,0
-intro2			BYTE		"Please input 10 signed decimal integers that can fit inside a 32 bit register",13,10,
-							"The program will then display the integers, their sum, and the average",13,10,0
+intro2			BYTE		"Please input 10 signed decimal integers that can fit inside a 32 bit register.",13,10,
+							"The program will then display the integers, their sum, and the average.",13,10,0
 prompt			BYTE		"Please enter a signed integer: ",0
 userInput		BYTE		MAX_USER_INPUT_SIZE DUP(?)
 userInputLen	DWORD		?
@@ -69,6 +69,14 @@ outString		BYTE		1 DUP(?)
 
 .code
 main PROC
+
+	mDisplayString	OFFSET intro1
+
+	call	Crlf
+
+	mDisplayString  OFFSET intro2
+
+	call	Crlf
 	
 	push	OFFSET userNums
 	push	OFFSET setNegative
