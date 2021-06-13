@@ -10,10 +10,12 @@ Finally the sums and averages are calculated.
 ### Macros
 
 **mGetString**: Displays a prompt and read user input
+
 **mDisplayString**: Prints string displayed in a memory location.
 
 ### Procs
 **ReadVal**: Uses string primitive to convert strings of ascii digits to numeric SDWORD values. Also validates user inputs.
+
 **WriteVal**: Converts numeric SDWORD value to string of ASCII digits. 
 
 ### Requirements:
